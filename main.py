@@ -19,11 +19,15 @@ class MyFirstWindow:
         # row 0 Create a label widget using .grid
         self.label = Label(self.parent_frame, text="Hello, Tkinter!", font=self.bold_font_12)
         self.label.grid(row=0, columnspan=2, padx=20, pady=20)
-        # row 1
-        self.entry_label = Label(self.parent_frame, text="This is a label", font=self.bold_font_12)
-        self.entry_label.grid(row=1, column=0, padx=20, pady=20)
-        entry_box = Entry(self.parent_frame, font=self.text_font_6)
-        entry_box.grid(row=1, column=1, pady=5)
+        # row 1 Entry labels and boxes
+        entry_labels = ["Entry 1", "Entry 2", "Entry 3"]
+        self.entry_boxes = []
+
+        for i, label in enumerate(entry_labels):
+          Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i, column=0, sticky=E)
+          entry_box = Entry(self.parent_frame, font=self.text_font_6)
+          entry_box.grid(row=i, column=1, pady=5)
+          self.entry_boxes.append(entry_box)
 
         # Create a button widget using .grid
         self.button = Button(self.parent_frame, text="Click Me!", font=self.bold_font_12, command=self.on_button_click)
@@ -39,8 +43,8 @@ class MySecondWindow:
         self.new_window.title("My Second Tkinter Window")
         self.new_window.configure(bg="#FFFFFF", borderwidth=10, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
     
-        #self.bold_font_12 = ("Arial", 12, "bold")
-        #self.text_font_6 = ("Arial", 10)
+        self.bold_font_12 = ("Arial", 12, "bold")
+        self.text_font_6 = ("Arial", 10)
     
         self.create_widgets()
     
@@ -49,11 +53,12 @@ class MySecondWindow:
         self.parent_frame = Frame(self.new_window, bg="lightgrey", borderwidth=2, relief="ridge")
         self.parent_frame.grid(padx=10, pady=10)
     
-        # Create a label widget
+        # row 0 Create a label widget
         self.label = Label(self.parent_frame, text="Welcome to the second window!", font=self.bold_font_12)
         self.label.grid(row=0, columnspan=2, padx=20, pady=20)
+        # row 2
     
-        # Create another button to close the second window
+        # row 3 Create another button to close the second window
         self.close_button = Button(self.parent_frame, text="Close", font=self.bold_font_12, command=self.new_window.destroy)
         self.close_button.grid(row=1, columnspan=2, padx=20, pady=10)
 
