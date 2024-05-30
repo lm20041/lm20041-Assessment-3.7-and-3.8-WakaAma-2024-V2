@@ -30,7 +30,32 @@ class MyFirstWindow:
         self.button.grid(row=2, columnspan=2, padx=20, pady=10)
 
     def on_button_click(self):
-        print("Button Clicked!")
+        MySecondWindow(self.master)
+
+class MySecondWindow:
+    def __init__(self, master):
+        # Create a new top-level window
+        self.new_window = Toplevel(master)
+        self.new_window.title("My Second Tkinter Window")
+        self.new_window.configure(bg="#FFFFFF", borderwidth=10, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
+    
+        #self.bold_font_12 = ("Arial", 12, "bold")
+        #self.text_font_6 = ("Arial", 10)
+    
+        self.create_widgets()
+    
+    def create_widgets(self):
+        # Create the parent frame
+        self.parent_frame = Frame(self.new_window, bg="lightgrey", borderwidth=2, relief="ridge")
+        self.parent_frame.grid(padx=10, pady=10)
+    
+        # Create a label widget
+        self.label = Label(self.parent_frame, text="Welcome to the second window!", font=self.bold_font_12)
+        self.label.grid(row=0, columnspan=2, padx=20, pady=20)
+    
+        # Create another button to close the second window
+        self.close_button = Button(self.parent_frame, text="Close", font=self.bold_font_12, command=self.new_window.destroy)
+        self.close_button.grid(row=1, columnspan=2, padx=20, pady=10)
 
 # Create the main window and run the application
 if __name__ == "__main__":
