@@ -17,21 +17,21 @@ class MyFirstWindow:
         self.parent_frame = Frame(self.master, bg="lightgrey", borderwidth=2, relief="ridge")
         self.parent_frame.grid(padx=10, pady=10)
         # row 0 Create a label widget using .grid
-        self.label = Label(self.parent_frame, text="Hello, Tkinter!", font=self.bold_font_12)
-        self.label.grid(row=0, columnspan=2, padx=20, pady=20)
+        self.label_top = Label(self.parent_frame, text="Hello, Tkinter!", font=self.bold_font_12)
+        self.label_top.grid(row=0, columnspan=2, padx=20, pady=20)
         # row 1 Entry labels and boxes
         entry_labels = ["Entry 1", "Entry 2", "Entry 3"]
         self.entry_boxes = []
 
         for i, label in enumerate(entry_labels):
-          Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i, column=0, sticky=E)
+          Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i+1, column=0, sticky=E)
           entry_box = Entry(self.parent_frame, font=self.text_font_6)
-          entry_box.grid(row=i, column=1, pady=5)
+          entry_box.grid(row=i+1, column=1, pady=5)
           self.entry_boxes.append(entry_box)
 
         # Create a button widget using .grid
         self.button = Button(self.parent_frame, text="Click Me!", font=self.bold_font_12, command=self.on_button_click)
-        self.button.grid(row=2, columnspan=2, padx=20, pady=10)
+        self.button.grid(row=4, columnspan=2, padx=20, pady=10)
 
     def on_button_click(self):
         MySecondWindow(self.master)
