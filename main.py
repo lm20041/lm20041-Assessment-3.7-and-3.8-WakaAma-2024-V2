@@ -57,16 +57,20 @@ class MySecondWindow:
         # row 0 Create a label widget
         self.label = Label(self.parent_frame, text="Welcome to the second window!", font=self.bold_font_12)
         self.label.grid(row=0, columnspan=2, padx=20, pady=20)
-        # row 2
-        image_path = "images"  # Assuming images are in "ColorCard-image" directory
-        print("Loading image:", image_path)  # Debugging: Print the image path
-        image = PhotoImage(file=image_path)
-          # Resize the image to 50x50 pixels
-        #image = image.subsample(2, 2)  # Adjust the subsampling factors as needed
-        self.images.append(image)  # Store a reference to the PhotoImage object
-        # row 3 Create another button to close the second window
+        # row 1 Load a image
+        # Make sure you have a image file "e.png" in the same directory as your script
+        image_path = "images.png"
+        self.photo = PhotoImage(file=image_path)
+
+        # Create a label to display the image
+        self.image_label = Label(self.parent_frame, image=self.photo)
+        #self.photo.append(image_path)  # Store a reference to the PhotoImage object
+        
+        self.image_label.grid(row=1, padx=20, pady=20)
+        self.image_label.config(image=self.photo)
+        # row 2 Create another button to close the second window
         self.close_button = Button(self.parent_frame, text="Close", font=self.bold_font_12, command=self.new_window.destroy)
-        self.close_button.grid(row=1, columnspan=2, padx=20, pady=10)
+        self.close_button.grid(row=2, columnspan=2, padx=20, pady=10)
 
 # Create the main window and run the application
 if __name__ == "__main__":
