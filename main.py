@@ -13,11 +13,13 @@ class Password:
 
     self.create_widgets()
   def create_widgets(self):
+    #var
+    button_fg = "white"
     # Define entry labels
     entry_labels = ["username", "password"]
     self.entry_boxes = []
     # row0
-    self.heading_label = Label(self.parent_frame, text="Waka Ama", font=("Arial", "16", "bold"), bg=self.background)
+    self.heading_label = Label(self.parent_frame, text="Waka Ama", font=self.text_font_6, bg=self.background)
     self.heading_label.grid(row=0, columnspan=2)
     # row1
     txt="if Wakana culb member please enter password below"
@@ -31,7 +33,22 @@ class Password:
       entry_box = Entry(self.parent_frame, font=self.text_font_6)
       entry_box.grid(row=i+2, column=1, pady=5)
       self.entry_boxes.append(entry_box) 
-    # row3
+    # row4 Create validate button
+    self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.validate_button.grid(row=4, columnspan=2)
+
+  def validate_entries(self):
+    # Define correct values
+    correct_values = ["overseers", "W@k@C1ub3234", "correct"]
+
+    # Validate each entry
+    for i, entry_box in enumerate(self.entry_boxes):
+      if entry_box.get() == correct_values[i]:
+        entry_box.config(bg="green")
+      else:
+        entry_box.config(bg="red")
+        error =f"{entry_box} not correct"
+        print(error)
 if __name__ == "__main__":
   root = Tk()
   app = Password(root)
