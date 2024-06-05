@@ -49,8 +49,8 @@ class Password:
     self.parent_frame = Frame(self.password_box, bg=background)
     self.parent_frame.grid(padx=10, pady=10)
 
-    self.create_widgets()
-  def create_widgets(self):
+    self.create_widgets(partner)
+  def create_widgets(self, partner):
     #var
     button_fg = "white"
     # row 0
