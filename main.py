@@ -49,6 +49,8 @@ class Password:
     # row 1
     # row 2
     # row 4
+    dismiss_password_button = Button(root, text="Submit", command=self.close_password)
+    dismiss_password_button.grid(row=4, pady=10)
   # closes password dialogue (used by button and x at top of dialogue)
   def close_password(self, partner):
     #put help button back to normal...
