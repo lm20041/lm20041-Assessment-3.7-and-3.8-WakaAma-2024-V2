@@ -16,9 +16,17 @@ class MainWindow:
   def create_widgets(self):
     #var
     button_fg = "white"
-    # row 0
-    # row 1
-    # row 2
+    # row 0 text
+    self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
+    self.heading_label.grid(row=0)
+    # row 1 image
+    image_pathway="image here"
+    self.image_label = Label(self.parent_frame, text=image_pathway, font=("Arial", "10"), bg=self.background)
+    self.image_label.grid(row=1)
+    # row 2 text
+    txt = "this program is created to help the Waka Ama club sort through their recorded files from the race to determine the associated winner of place. This app is only to be used by the Waka Ama club therefore a password will be needed to access this app. if you were kind of club and you have not received the password please contact {phone number}."
+    self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "10"), bg=self.background)
+    self.text_label.grid(row=2)
     # row 4
     self.to_password_button = Button(self.parent_frame, text="Submit", command=self.to_password)
     self.to_password_button.grid(row=4, pady=10)
