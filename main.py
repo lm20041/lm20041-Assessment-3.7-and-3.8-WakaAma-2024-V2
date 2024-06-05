@@ -25,16 +25,16 @@ class Password:
     txt="if Wakana culb member please enter password below"
     self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "10"), bg=self.background)
     self.text_label.grid(row=1, columnspan=2)
-
+    
     # row2 Create entry labels and boxes
     for i, label in enumerate(entry_labels):
       # Create and place the label above the entry box
       Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i+2, column=0, sticky=W, padx=5, pady=(10, 0))
       entry_box = Entry(self.parent_frame, font=self.text_font_6)
+      show_char = '*' if label == "password" else ''
       entry_box.grid(row=i+2, column=1, pady=5)
-      entry_box.config(highlightthickness=2, highlightbackground="grey", highlightcolor="blue")
-      if i==2:
-        entry_box.config(show='*')
+      entry_box.config(highlightthickness=2, show=show_char, highlightbackground="grey", highlightcolor="blue")
+      
       self.entry_boxes.append(entry_box) 
     # row4 Create validate button
     self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
