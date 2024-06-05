@@ -32,6 +32,7 @@ class Password:
       Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i+2, column=0, sticky=W, padx=5, pady=(10, 0))
       entry_box = Entry(self.parent_frame, font=self.text_font_6)
       entry_box.grid(row=i+2, column=1, pady=5)
+      entry_box.config(highlightthickness=2, highlightbackground="grey", highlightcolor="blue")
       self.entry_boxes.append(entry_box) 
     # row4 Create validate button
     self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
@@ -74,8 +75,12 @@ class Password:
         entry_box.config(bg="green")
     if all_valid:
       self.error_label.config(text="All entries are valid.", fg="green")
+      for entry_box in self.entry_boxes:
+        entry_box.config(bg="green", highlightbackground="lime", highlightcolor="black")
     else:
       self.error_label.config(text=error_message, fg="red")
+      for entry_box in self.entry_boxes:
+        entry_box.config(bg="red", highlightbackground="pink", highlightcolor="black")
 if __name__ == "__main__":
   root = Tk()
   app = Password(root)
