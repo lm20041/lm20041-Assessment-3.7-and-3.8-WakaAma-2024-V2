@@ -20,7 +20,7 @@ class MainWindow:
     # row 1
     # row 2
     # row 4
-    to_password_button = Button(root, text="Submit", command=self.to_password())
+    to_password_button = Button(root, text="Submit", command=self.to_password)
     to_password_button.grid(row=4, pady=10)
   def to_password(self):
     Password(self)
@@ -30,11 +30,14 @@ class Password:
     #set up dialogue box and background colour
     background = "#ffe6cc"
     self.password_box = Toplevel()
+
     # disable to_password button
     partner.to_password_button.config(state=DISABLED)
+
     # If users press cross at top, closes password and 'releases' password button
     self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
 
+    
     self.parent_frame = Frame(self.password_box, bg=background)
     self.parent_frame.grid(padx=10, pady=10)
 
