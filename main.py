@@ -52,29 +52,26 @@ class Password:
 
     all_valid = True
     error_message = "Errors:"
-    while all_valid == True:
-      for i, entry_box in enumerate(self.entry_boxes):
-        entry_value = entry_box.get()
-        # Check if the entry value is empty
-        if entry_value == None:  
-          entry_box.config(bg="red")
-          error_message = error_messages[0]
-          all_valid = False
-          break
-        elif ' ' in entry_value:
-          entry_box.config(bg="red")
-          error_message = error_messages[1]
-          all_valid = False
-          break
-        # Check if the entry value is correct
-        if entry_value == correct_values[i]:
-          entry_box.config(bg="green")
-          self.error_label.config(text="")
-        else:
-          entry_box.config(bg="red")
-          error_message = error_messages[i+2]
-          all_valid = False
-          break
+    for i, entry_box in enumerate(self.entry_boxes):
+      entry_value = entry_box.get()
+      # Check if the entry value is empty
+      if entry_value == "":  
+        entry_box.config(bg="red")
+        error_message = error_messages[0]
+        all_valid = False
+        break
+      elif ' ' in entry_value:
+        entry_box.config(bg="red")
+        error_message = error_messages[1]
+        all_valid = False
+        break
+      elif entry_value != correct_values[i]:
+        entry_box.config(bg="red")
+        error_message = error_messages[i+2]
+        all_valid = False
+        break
+      else:
+        entry_box.config(bg="green")
     if all_valid:
       self.error_label.config(text="All entries are valid.", fg="green")
     else:
