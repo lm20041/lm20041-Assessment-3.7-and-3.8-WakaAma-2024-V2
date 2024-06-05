@@ -33,6 +33,8 @@ class Password:
       entry_box = Entry(self.parent_frame, font=self.text_font_6)
       entry_box.grid(row=i+2, column=1, pady=5)
       entry_box.config(highlightthickness=2, highlightbackground="grey", highlightcolor="blue")
+      if i==2:
+        entry_box.config(show='*')
       self.entry_boxes.append(entry_box) 
     # row4 Create validate button
     self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
