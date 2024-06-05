@@ -37,7 +37,7 @@ class Password:
     self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
     self.validate_button.grid(row=4, columnspan=2)
     # row5
-    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6, bg=self.background, fg="red")
+    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=5, columnspan=2, sticky=W)
 
   def validate_entries(self):
