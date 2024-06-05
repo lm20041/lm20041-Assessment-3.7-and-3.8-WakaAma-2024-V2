@@ -20,8 +20,8 @@ class MainWindow:
     # row 1
     # row 2
     # row 4
-    to_password_button = Button(root, text="Submit", command=self.to_password)
-    to_password_button.grid(row=4, pady=10)
+    self.to_password_button = Button(self.parent_frame, text="Submit", command=self.to_password)
+    self.to_password_button.grid(row=4, pady=10)
   def to_password(self):
     Password(self)
 
@@ -49,8 +49,8 @@ class Password:
     # row 1
     # row 2
     # row 4
-    dismiss_password_button = Button(root, text="Submit", command=self.close_password)
-    dismiss_password_button.grid(row=4, pady=10)
+    self.dismiss_password_button = Button(self.parent_frame, text="Submit", command=partial(self.close_password, partner))
+    self.dismiss_password_button.grid(row=4, pady=10)
   # closes password dialogue (used by button and x at top of dialogue)
   def close_password(self, partner):
     #put help button back to normal...
