@@ -36,19 +36,49 @@ class Password:
     # row4 Create validate button
     self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
     self.validate_button.grid(row=4, columnspan=2)
+    # row5
+    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6, bg=self.background, fg="red")
+    self.error_label.grid(row=5, columnspan=2, sticky=W)
 
   def validate_entries(self):
     # Define correct values
     correct_values = ["overseers", "W@k@C1ub3234", "correct"]
+    error_messages = [
+      "Please enter in your user and password before continuing",
+      "Sorry, no space allowed",
+      "Invalid username",
+      "Invalid password"
+      ]
 
-    # Validate each entry
-    for i, entry_box in enumerate(self.entry_boxes):
-      if entry_box.get() == correct_values[i]:
-        entry_box.config(bg="green")
-      else:
-        entry_box.config(bg="red")
-        error =f"{entry_box} not correct"
-        print(error)
+    all_valid = True
+    error_message = "Errors:"
+    while all_valid == True:
+      for i, entry_box in enumerate(self.entry_boxes):
+        entry_value = entry_box.get()
+        # Check if the entry value is empty
+        if entry_value == None:  
+          entry_box.config(bg="red")
+          error_message = error_messages[0]
+          all_valid = False
+          break
+        elif ' ' in entry_value:
+          entry_box.config(bg="red")
+          error_message = error_messages[1]
+          all_valid = False
+          break
+        # Check if the entry value is correct
+        if entry_value == correct_values[i]:
+          entry_box.config(bg="green")
+          self.error_label.config(text="")
+        else:
+          entry_box.config(bg="red")
+          error_message = error_messages[i+2]
+          all_valid = False
+          break
+    if all_valid:
+      self.error_label.config(text="All entries are valid.", fg="green")
+    else:
+      self.error_label.config(text=error_message, fg="red")
 if __name__ == "__main__":
   root = Tk()
   app = Password(root)
