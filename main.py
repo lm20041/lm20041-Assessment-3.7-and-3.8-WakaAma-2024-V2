@@ -85,8 +85,8 @@ class Password:
 
       self.entry_boxes.append(entry_box) 
     # row4 Create validate button
-    self.validate_button = Button(self.parent_frame, width=8, height=1, text="Enter", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
-    self.validate_button.grid(row=4, columnspan=2)
+    self.to_convertor_button = Button(self.parent_frame, width=8, height=1, text="Enter", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.to_convertor_button.grid(row=4, columnspan=2)
     # row5
     self.error_label = Label(self.parent_frame, text="", font=("Arial", "10"),wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=5, columnspan=2)
@@ -134,7 +134,7 @@ class Password:
       # Check Lockout Condition
       if self.attempts >= 3:
         self.error_label.config(text="Too many invalid attempts. You are locked out.", fg="red")
-        self.validate_button.config(state=DISABLED)
+        self.to_convertor_button.config(state=DISABLED)
         for entry_box in self.entry_boxes:
           entry_box.config(state='disabled')
   def to_convertor(self):
