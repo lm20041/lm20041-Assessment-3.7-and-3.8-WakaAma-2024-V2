@@ -29,6 +29,7 @@ class MainWindow:
 
     # Create a label to display the image
     self.image_label = Label(self.parent_frame, image=image)
+    self.image_label.image = image  # Store a reference to the PhotoImage object
     self.image_label.grid(row=1, padx=20, pady=20)
     # row 2 text
     txt = "this program is created to help the Waka Ama club sort through their recorded files from the race to determine the associated winner of place. This app is only to be used by the Waka Ama club therefore a password will be needed to access this app. if you were kind of club and you have not received the password please contact {phone number}."
