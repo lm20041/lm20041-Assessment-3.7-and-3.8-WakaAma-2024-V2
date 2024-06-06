@@ -44,7 +44,10 @@ class Password:
 
     # If users press cross at top, closes password and 'releases' password button
     self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
-
+    #vars
+    self.text_font_6 = ("Arial", "12", "bold")
+    self.text_fg = "#FFFFFF"
+    self.background = "white"
     
     self.parent_frame = Frame(self.password_box, bg=background)
     self.parent_frame.grid(padx=10, pady=10)
