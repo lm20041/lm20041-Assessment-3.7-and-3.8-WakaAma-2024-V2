@@ -36,7 +36,6 @@ class MainWindow:
 class Password:
   def __init__(self, partner):
     #set up dialogue box and background colour
-    background = "#ffe6cc"
     self.password_box = Toplevel()
 
     # disable to_password button
@@ -48,14 +47,16 @@ class Password:
     self.text_font_6 = ("Arial", "12", "bold")
     self.text_fg = "#FFFFFF"
     self.background = "white"
+    self.attempts = 0 # Attempts Counter
     
-    self.parent_frame = Frame(self.password_box, bg=background)
+    self.parent_frame = Frame(self.password_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
 
     self.create_widgets(partner)
   def create_widgets(self, partner):
     #var
     button_fg = "white"
+    
     # Define entry labels
     entry_labels = ["username", "password"]
     self.entry_boxes = []
@@ -82,10 +83,6 @@ class Password:
     # row5
     self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=5, columnspan=2, sticky=W)
-    # row 6
-    self.dismiss_password_button = Button(self.parent_frame, text="dismiss", command=partial(self.close_password, partner))
-    self.dismiss_password_button.grid(row=6, pady=10)
-    # closes password dialogue (used by button and x at top of dialogue)
   def validate_entries(self):
     # Define correct values
     correct_values = ["overseers", "W@k@C1ub3234", "correct"]
@@ -118,14 +115,22 @@ class Password:
         break
       else:
         entry_box.config(bg="green")
+    
+    # Increment Attempts Counter
     if all_valid:
       self.error_label.config(text="All entries are valid.", fg="green")
       for entry_box in self.entry_boxes:
         entry_box.config(bg="green", highlightbackground="lime", highlightcolor="black")
     else:
+      self.attempts += 1
       self.error_label.config(text=error_message, fg="red")
       for entry_box in self.entry_boxes:
         entry_box.config(bg="red", highlightbackground="pink", highlightcolor="black")
+      # Check Lockout Condition
+      if self.attempts >= 3:
+        self.error_label.config(text="Too many invalid attempts. You are locked out.", fg="red")
+        self.validate_button.config(state=DISABLED)
+        self.dismiss_password_button.config(state=DISABLED)
   def close_password(self, partner):
     #put help button back to normal...
     partner.to_password_button.config(state=NORMAL)
