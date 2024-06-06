@@ -125,7 +125,7 @@ class Password:
     
     # Increment Attempts Counter
     if all_valid:
-      to_convertor() # unlock and go to next window
+      self.to_convertor() # unlock and go to next window
     else:
       self.attempts += 1
       self.error_label.config(text=error_message, fg="red")
@@ -157,7 +157,7 @@ class Convertor:
     partner.to_convertor_button.config(state=DISABLED)
 
     # If users press cross at top, closes convertor and 'releases' password button
-    self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
+    self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
 
     self.parent_frame = Frame(self.convertor_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
@@ -200,8 +200,8 @@ class Convertor:
   def list_filepath():
     pass
   def to_help(self, partner):
-    self.
-  def close_Convertor(self, partner):
+    pass
+  def close_convertor(self, partner):
     #put to_convertor button back to normal
     partner.to_convertor_button.config(state=NORMAL)
     self.convertor_box.destroy()
