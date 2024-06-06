@@ -47,7 +47,7 @@ class Password:
     partner.to_password_button.config(state=DISABLED)
 
     # If users press cross at top, closes password and 'releases' password button
-    self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner, self.attempts))
+    self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
     
     self.parent_frame = Frame(self.password_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
@@ -132,9 +132,9 @@ class Password:
         self.validate_button.config(state=DISABLED)
         for entry_box in self.entry_boxes:
           entry_box.config(state='disabled')
-  def close_password(self, partner, attempts):
+  def close_password(self, partner):
     #put password button back to normal if attempts not up...
-    if attempts < 3:
+    if self.attempts < 3:
       partner.to_password_button.config(state=NORMAL)
     self.password_box.destroy()
 
