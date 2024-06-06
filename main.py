@@ -16,6 +16,7 @@ class MainWindow:
   def create_widgets(self):
     #var
     button_fg = "white"
+    button_bg = "#004C99"
     # row 0 text
     self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
     self.heading_label.grid(row=0)
@@ -34,7 +35,7 @@ class MainWindow:
     self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "8"), wraplength=350, bg=self.background)
     self.text_label.grid(row=2)
     # row 4
-    self.to_password_button = Button(self.parent_frame, text="Submit", command=self.to_password)
+    self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
     self.to_password_button.grid(row=4, pady=10)
   def to_password(self):
     Password(self)
@@ -84,11 +85,11 @@ class Password:
 
       self.entry_boxes.append(entry_box) 
     # row4 Create validate button
-    self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.validate_button = Button(self.parent_frame, width=8, height=1, text="Enter", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
     self.validate_button.grid(row=4, columnspan=2)
     # row5
-    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
-    self.error_label.grid(row=5, columnspan=2, sticky=W)
+    self.error_label = Label(self.parent_frame, text="", font=("Arial", "10"),wraplength=400, bg=self.background, fg="red")
+    self.error_label.grid(row=5, columnspan=2)
   def validate_entries(self):
     # Define correct values
     correct_values = ["overseers", "W@k@C1ub3234", "correct"]
