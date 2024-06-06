@@ -35,6 +35,11 @@ class MainWindow:
 
 class Password:
   def __init__(self, partner):
+    #vars
+    self.text_font_6 = ("Arial", "12", "bold")
+    self.text_fg = "#FFFFFF"
+    self.background = "white"
+    self.attempts = 0 # Attempts Counter
     #set up dialogue box and background colour
     self.password_box = Toplevel()
 
@@ -42,12 +47,7 @@ class Password:
     partner.to_password_button.config(state=DISABLED)
 
     # If users press cross at top, closes password and 'releases' password button
-    self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
-    #vars
-    self.text_font_6 = ("Arial", "12", "bold")
-    self.text_fg = "#FFFFFF"
-    self.background = "white"
-    self.attempts = 0 # Attempts Counter
+    self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner, self.attempts))
     
     self.parent_frame = Frame(self.password_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
@@ -130,10 +130,12 @@ class Password:
       if self.attempts >= 3:
         self.error_label.config(text="Too many invalid attempts. You are locked out.", fg="red")
         self.validate_button.config(state=DISABLED)
-        self.dismiss_password_button.config(state=DISABLED)
-  def close_password(self, partner):
-    #put help button back to normal...
-    partner.to_password_button.config(state=NORMAL)
+        for entry_box in self.entry_boxes:
+          entry_box.config(state='disabled')
+  def close_password(self, partner, attempts):
+    #put password button back to normal if attempts not up...
+    if attempts < 3:
+      partner.to_password_button.config(state=NORMAL)
     self.password_box.destroy()
 
 if __name__ == "__main__":
