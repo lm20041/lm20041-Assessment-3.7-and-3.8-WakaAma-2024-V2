@@ -6,5 +6,6 @@ file_pattern = '*Final*'  # file name input
 
 for root, _, files in os.walk(directory_to_search):
     for filename in files:
-        if fnmatch.fnmatch(filename, file_pattern): #pattern matching
-            print(filename)
+        if fnmatch.fnmatch(filename, file_pattern):
+            file_path = os.path.join(root, filename)
+            print(file_path)
