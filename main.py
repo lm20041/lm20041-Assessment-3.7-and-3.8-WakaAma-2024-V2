@@ -1,6 +1,7 @@
 import os  # for file and directory operations
 import fnmatch  # for matching file patterns
 import csv  # for handling CSV files
+from collections import defaultdict
 
 def find_files_with_name(directory, pattern):
     matching_files = []
@@ -29,23 +30,22 @@ def extract_information_from_file(file_path):  # for each file in list
                     print(f"Error parsing row: {row}. Error: {e}")
     return extracted_data
 
-def analyse_file_data(extracted_data):
-    points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
-    association_points = {}
+def analyse_aggregated_data(all_extracted_data):
+    points_for_place = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
+    association_points = defaultdict(int)
 
-    # Sort data by place to ensure we are dealing with top 10
-    extracted_data_sorted = sorted(extracted_data, key=lambda x: x["Place"])
-
-    for record in extracted_data_sorted[:10]:  # Consider only the top 10 records
+    # Aggregate points for each association
+    for record in all_extracted_data:
         place = record["Place"]
         association = record["Association"]
-        points_earned = points.get(place, 1)  # If place > 8, get 1 point
+        points_earned = points_for_place.get(place, 1)  # If place > 8, get 1 point
 
-        if association not in association_points:
-            association_points[association] = 0
         association_points[association] += points_earned
 
-    return association_points
+    # Sort associations by total points
+    sorted_associations = sorted(association_points.items(), key=lambda x: x[1], reverse=True)
+
+    return sorted_associations[:10]  # Return only the top 10 associations
 
 def aggregate_analysis(directory_to_search, file_pattern):
     all_extracted_data = []
@@ -55,13 +55,12 @@ def aggregate_analysis(directory_to_search, file_pattern):
         all_extracted_data.extend(extracted_data)
 
     # Analyse the combined data from all files
-    combined_analysis = analyse_file_data(all_extracted_data)
+    combined_analysis = analyse_aggregated_data(all_extracted_data)
 
-    # Print the combined results
-    print(f"\nCombined Results from all files:")
-    sorted_associations = sorted(combined_analysis.items(), key=lambda x: x[1], reverse=True)
-    for association, points in sorted_associations:
-        print(f"Association: {association}, Points: {points}")
+    # Print the combined results with ranking
+    print(f"\nTop 10 Associations from all files:")
+    for rank, (association, points) in enumerate(combined_analysis, start=1):
+        print(f"{rank}. Association: {association}, Points: {points}")
 
 # Input
 aggregate_analysis("waka_ama_db", "*Final*")
