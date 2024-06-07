@@ -2,10 +2,13 @@ import os #open file
 import fnmatch #search for file name
 
 def find_files_with_name(directory, pattern):
-  matching_files = []
+  matching_files = {}
   for root, _, files in os.walk(directory):
       for filename in fnmatch.filter(files, pattern): # file_pattern in fouder
-          matching_files.append(os.path.join(root, filename))
+          file_path = os.path.join(root, filename)
+          matching_files.append(
+              filename: file_path
+              )
   return matching_files
 
 # Specify the directory to search and the pattern
