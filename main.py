@@ -47,28 +47,21 @@ def analyse_file_data(extracted_data):
 
     return association_points
 
-# Variables to store results
-folder_results_list = {}
-files_name_list = {}
-table_results_list = {}
-
-# Main code
-def file_research(directory_to_search, file_pattern):
+def aggregate_analysis(directory_to_search, file_pattern):
+    all_extracted_data = []
     matching_files = find_files_with_name(directory_to_search, file_pattern)  # Find files
     for file_path in matching_files:
         extracted_data = extract_information_from_file(file_path)
-        table_report = analyse_file_data(extracted_data)
+        all_extracted_data.extend(extracted_data)
 
-        # Store the results for each file
-        folder_results_list[file_path] = table_report
-        files_name_list[file_path] = os.path.basename(file_path)
-        table_results_list[file_path] = extracted_data
+    # Analyse the combined data from all files
+    combined_analysis = analyse_file_data(all_extracted_data)
 
-    # Print the results
-    for file_path, report in folder_results_list.items():
-        print(f"\nResults for file: {files_name_list[file_path]}")
-        for association, points in report.items():
-            print(f"Association: {association}, Points: {points}")
+    # Print the combined results
+    print(f"\nCombined Results from all files:")
+    sorted_associations = sorted(combined_analysis.items(), key=lambda x: x[1], reverse=True)
+    for association, points in sorted_associations:
+        print(f"Association: {association}, Points: {points}")
 
 # Input
-file_research("waka_ama_db", "*Final*")
+aggregate_analysis("waka_ama_db", "*Final*")
