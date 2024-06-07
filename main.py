@@ -35,11 +35,11 @@ matching_files = find_files_with_name(directory_to_search, file_pattern)
 if matching_files:
     print("Found the following files:")
     for filename, file_path in matching_files.items():
-        print(f"Filename: {filename}")
-        print(f"File Path: {file_path}\n")
+        print(f"\n Filename: {filename}")
+        print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
-        #association_points = analyse_file_data(extracted_data)
-        print(f"Extracted Data: {extracted_data}")
-        #print(f"Association Points: {association_points}\n")
+        for association, place in extracted_data.items():
+            print(f"Association: {association}")
+            print(f"Place: {place}")
 else:
     print(f"No files found with {file_pattern} in the name.")
