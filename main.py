@@ -1,5 +1,6 @@
-import os
-import fnmatch
+import os  # for file and directory operations
+import fnmatch  # for matching file patterns
+import csv  # for handling CSV files
 
 def find_files_with_name(directory, pattern):
     matching_files = []
@@ -8,55 +9,66 @@ def find_files_with_name(directory, pattern):
             matching_files.append(os.path.join(root, filename))
     return matching_files
 
-def extract_information_from_file(file_path):
+def extract_information_from_file(file_path):  # for each file in list
     extracted_data = []
 
-    with open(file_path, 'r') as file:
-        contents = file.readlines()
-
-    for line in contents:
-        parts = line.strip().split()  # Split the line by spaces (or other delimiter)
-        if len(parts) >= 6:  # Ensure there are enough parts to extract the required information
-            place = parts[0]  # First place (index 0)
-            team_name = parts[3]  # Fourth place (index 3)
-            association = parts[5]  # Sixth place (index 5)
-            extracted_data.append({
-                "Place": place,
-                "Team Name": team_name,
-                "Association": association
-            })
-
+    with open(file_path, 'r', encoding='latin-1') as file:  # Use 'latin-1' to handle encoding issues
+        reader = csv.reader(file)  # Use csv.reader to handle comma-separated values
+        for row in reader:
+            if len(row) >= 6:  # Ensure there are enough columns
+                try:
+                    place = int(row[0])  # Convert place to integer
+                    team_name = row[3]
+                    association = row[5]
+                    extracted_data.append({
+                        "Place": place,
+                        "Team Name": team_name,
+                        "Association": association
+                    })
+                except ValueError as e:
+                    print(f"Error parsing row: {row}. Error: {e}")
     return extracted_data
 
-# Specify the directory to search and the pattern
-directory_to_search = 'waka_ama_db'  # Change this to the directory you want to search
-file_pattern = '*Final*'  # Pattern to match files containing "Final" in their name
+def analyse_file_data(extracted_data):
+    points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
+    association_points = {}
 
-# Find files
-matching_files = find_files_with_name(directory_to_search, file_pattern)
+    # Sort data by place to ensure we are dealing with top 10
+    extracted_data_sorted = sorted(extracted_data, key=lambda x: x["Place"])
 
-# Print matching files and their contents
-if matching_files:
-    print("Found the following files:")
-    for idx, file_path in enumerate(matching_files):
-        print(f"{idx + 1}: {file_path}")
+    for record in extracted_data_sorted[:10]:  # Consider only the top 10 records
+        place = record["Place"]
+        association = record["Association"]
+        points_earned = points.get(place, 1)  # If place > 8, get 1 point
 
-    # Ask the user to select a file to open
-    try:
-        selected_index = int(input("\nEnter the number of the file you want to open: ")) - 1
-        if 0 <= selected_index < len(matching_files):
-            selected_file_path = matching_files[selected_index]
-            print(f"\nOpening file: {selected_file_path}\n")
-            try:
-                extracted_info = extract_information_from_file(selected_file_path)
-                print("Extracted Information:")
-                for info in extracted_info:
-                    print(info)
-            except Exception as e:
-                print(f"Could not read file {selected_file_path}: {e}")
-        else:
-            print("Invalid selection. Please run the program again and select a valid number.")
-    except ValueError:
-        print("Invalid input. Please enter a number corresponding to the file you want to open.")
-else:
-    print(f"No files found with {file_pattern} in the name.")
+        if association not in association_points:
+            association_points[association] = 0
+        association_points[association] += points_earned
+
+    return association_points
+
+# Variables to store results
+folder_results_list = {}
+files_name_list = {}
+table_results_list = {}
+
+# Main code
+def file_research(directory_to_search, file_pattern):
+    matching_files = find_files_with_name(directory_to_search, file_pattern)  # Find files
+    for file_path in matching_files:
+        extracted_data = extract_information_from_file(file_path)
+        table_report = analyse_file_data(extracted_data)
+
+        # Store the results for each file
+        folder_results_list[file_path] = table_report
+        files_name_list[file_path] = os.path.basename(file_path)
+        table_results_list[file_path] = extracted_data
+
+    # Print the results
+    for file_path, report in folder_results_list.items():
+        print(f"\nResults for file: {files_name_list[file_path]}")
+        for association, points in report.items():
+            print(f"Association: {association}, Points: {points}")
+
+# Input
+file_research("waka_ama_db", "*Final*")
