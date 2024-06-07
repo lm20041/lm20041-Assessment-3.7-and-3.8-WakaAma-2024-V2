@@ -10,7 +10,7 @@ def find_files_with_name(directory, pattern):
           matching_files[filename] = file_path
   return matching_files
 def extract_information_from_file(file_path):  # for each file in list
-    extracted_data = []
+    extracted_data = {}
     # Open the file in read mode
     with open(file_path, 'r') as file:
         for line in file.readlines():
@@ -29,12 +29,17 @@ file_pattern = '*Final*'  # Pattern to match files containing "flower" in their 
 
 # Find files
 matching_files = find_files_with_name(directory_to_search, file_pattern)
-extracted_data = extract_information_from_file(matching_files[filename])
 
-# Print matching files
+
+# Print matching files and extract information
 if matching_files:
     print("Found the following files:")
     for filename, file_path in matching_files.items():
-        print(f"filename:{filename} \nfile_path: {file_path}\n")
+        print(f"Filename: {filename}")
+        print(f"File Path: {file_path}\n")
+        extracted_data = extract_information_from_file(file_path)
+        #association_points = analyse_file_data(extracted_data)
+        print(f"Extracted Data: {extracted_data}")
+        #print(f"Association Points: {association_points}\n")
 else:
     print(f"No files found with {file_pattern} in the name.")
