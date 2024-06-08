@@ -26,14 +26,14 @@ if matching_files:
     print(f"First Line: {first_line}\n")
 
     # Process and print the remaining lines
-    print("Remaining Lines (1st and 6th fields):")
+    print("Remaining Lines (1st and 6th parts):")
     for line in remaining_lines:
         parts = line.strip().split()
         if len(parts) >= 6:
-            first_field = parts[0]
-            sixth_field = parts[5]
-            print(f"1st Field: {first_field}\n, 6th Field: {sixth_field}")
+            first_part = parts[0]
+            sixth_part = parts[5]
+            print(f"1st Part: {first_part}, 6th Part: {sixth_part}")
         else:
-            print("Line does not have enough parts:", line.strip())
+            print("Line does not have enough parts:")
 else:
     print("No files found with the specified pattern.")
