@@ -1,39 +1,49 @@
-import os
-import fnmatch
-import random
+import os #open file
+import fnmatch #search for file name
+# matching_files{{filename, file_path, Association, Place}}
 
-directory_to_search = 'waka_ama_db'  # Folder name input
-file_pattern = '*Final*'  # File name input
-matching_files = []
-
-# Traverse the directory and find matching files
-for root, _, files in os.walk(directory_to_search):
-    for filename in files:
-        if fnmatch.fnmatch(filename, file_pattern):
-            file_path = os.path.join(root, filename)
-            matching_files.append(file_path)
-
-# If matching files are found, select one randomly and process it
-if matching_files:
-    file_path = random.choice(matching_files)
-    print(f"\nRandomly Selected File: {file_path}\n")
-
+def find_files_with_name(directory, pattern):
+  matching_files = {}
+  for root, _, files in os.walk(directory):
+      for filename in fnmatch.filter(files, pattern): # file_pattern in fouder
+          file_path = os.path.join(root, filename)
+          matching_files[filename] = file_path
+  return matching_files
+def extract_information_from_file(file_path):  # for each file in list
+    extracted_data = {}
+    # Open the file in read mode
     with open(file_path, 'r') as file:
+        # strip top line
         first_line = file.readline().strip()
         remaining_lines = file.readlines()
+        # extract data from remaining lines
+        for line in remaining_lines:
+            parts = line.strip().split(',') # strip remove, Split() line by ' , ' 
+            if len(parts) >= 6:  # Ensure there are enough
+                Place = parts[0] # Place
+                Association = parts[5] # Association
+                extracted_data[Association] = Place
+    return extracted_data
+def analyse_file_data(extracted_data):
+    points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
+    association_points = {}
+# Specify the directory to search and the pattern
+directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
+file_pattern = '*Final*'  # Pattern to match files containing "flower" in their name
 
-    # Print the first line
-    print(f"First Line: {first_line}\n")
+# Find files
+matching_files = find_files_with_name(directory_to_search, file_pattern)
 
-    # Process and print the remaining lines
-    print("Remaining Lines (1st and 6th parts):")
-    for line in remaining_lines:
-        parts = line.strip().split(',')
-        if len(parts) >= 6:
-            first_part = parts[0]
-            sixth_part = parts[5]
-            print(f"1st Part: {first_part}, 6th Part: {sixth_part}")
-        else:
-            print("Line does not have enough parts:", line.strip())
+
+# Print matching files and extract information
+if matching_files:
+    print("Found the following files:")
+    for filename, file_path in matching_files.items():
+        print(f"\n Filename: {filename}")
+        print(f"File Path: {file_path}")
+        extracted_data = extract_information_from_file(file_path)
+        for association, place in extracted_data.items():
+            print(f"Association: {association}")
+            print(f"Place: {place}")
 else:
-    print("No files found with the specified pattern.")
+    print(f"No files found with {file_pattern} in the name.")
