@@ -17,8 +17,12 @@ if matching_files:
     print(f"\nRandomly Selected File: {file_path}\n")
 
     with open(file_path, 'r') as file:
-        content = file.read()
-        print("File Content:\n")
-        print(content)
+        first_line = file.readline().strip().strip()
+        remaining_lines = file.readlines()
+
+    print(f"First Line: {first_line}\n")
+    print("Remaining Lines:")
+    for line in remaining_lines:
+        print(line.strip())
 else:
     print("No files found with the specified pattern.")
