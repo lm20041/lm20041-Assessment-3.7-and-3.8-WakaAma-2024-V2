@@ -56,8 +56,10 @@ if matching_files:
         print(f"\nFilename: {filename}")
         print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
-        print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
+        for association, place in extracted_data.items():
+            print(f"Association: {association}")
+            print(f"Place: {place}")
         print(f"Association Points: {association_points}\n")
 else:
     print(f"No files found with {file_pattern} in the name.")
