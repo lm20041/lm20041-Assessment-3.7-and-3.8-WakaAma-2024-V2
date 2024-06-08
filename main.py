@@ -28,12 +28,12 @@ if matching_files:
     # Process and print the remaining lines
     print("Remaining Lines (1st and 6th parts):")
     for line in remaining_lines:
-        parts = line.strip().split()
+        parts = line.strip()
         if len(parts) >= 6:
             first_part = parts[0]
             sixth_part = parts[5]
             print(f"1st Part: {first_part}, 6th Part: {sixth_part}")
         else:
-            print("Line does not have enough parts:")
+            print("Line does not have enough parts:", line.strip())
 else:
     print("No files found with the specified pattern.")
