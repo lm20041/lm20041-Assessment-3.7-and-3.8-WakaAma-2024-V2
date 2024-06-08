@@ -42,12 +42,25 @@ def analyse_file_data(extracted_data):
                 association_points[association] = points[place]
     return association_points
 
+# Function to sum up points across multiple files
+def sum_up_points(all_association_points):
+    total_points = {}
+    for association_points in all_association_points:
+        for association, points in association_points.items():
+            if association in total_points:
+                total_points[association] += points
+            else:
+                total_points[association] = points
+    return total_points
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Directory to search
 file_pattern = '*Final*'  # Pattern to match files
 
 # Find files
 matching_files = find_files_with_name(directory_to_search, file_pattern)
+
+# List to hold points from all files
+all_association_points = []
 
 # Print matching files and extract information
 if matching_files:
@@ -56,10 +69,13 @@ if matching_files:
         print(f"\nFilename: {filename}")
         print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
+        print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
-        for association, place in extracted_data.items():
-            print(f"Association: {association}")
-            print(f"Place: {place}")
         print(f"Association Points: {association_points}\n")
+        all_association_points.append(association_points)
 else:
     print(f"No files found with {file_pattern} in the name.")
+
+# Sum up points from all files
+total_points = sum_up_points(all_association_points)
+print(f"Total Points for All Associations: {total_points}")
