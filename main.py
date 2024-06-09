@@ -53,11 +53,20 @@ def sum_up_points(all_association_points):
                 total_points[association] = points
     return total_points
 
-# Function to create the top 8 associations diary
-def create_top_8_diary(total_points):
-    sorted_associations = sorted(total_points.items(), key=lambda x: x[1], reverse=True)
-    top_8_associations = sorted_associations[:8]
-    return {assoc: points for assoc, points in top_8_associations}
+# Function to get the top 8 associations with the highest points
+def get_top_associations(total_points, top_n=8):
+    sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
+    top_associations = dict(sorted_associations[:top_n])
+    return top_associations
+
+# Function to list all files and folders
+def list_all_files_and_folders(directory):
+    all_files_folders = {}
+    for root, dirs, files in os.walk(directory):
+        for name in dirs + files:
+            file_path = os.path.join(root, name)
+            all_files_folders[name] = file_path
+    return all_files_folders
 
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Directory to search
@@ -69,21 +78,17 @@ matching_files = find_files_with_name(directory_to_search, file_pattern)
 # List to hold points from all files
 all_association_points = []
 
-# All file research diary
-all_file_research_diary = []
-
-# Namefile diary
-namefile_diary = {}
-
 # Print matching files and extract information
 if matching_files:
     print("Found the following files:")
     for filename, file_path in matching_files.items():
+        print(f"\nFilename: {filename}")
+        print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
+        print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
+        print(f"Association Points: {association_points}\n")
         all_association_points.append(association_points)
-        all_file_research_diary.append((filename, file_path))
-        namefile_diary[filename] = file_path
 else:
     print(f"No files found with {file_pattern} in the name.")
 
@@ -91,20 +96,14 @@ else:
 total_points = sum_up_points(all_association_points)
 print(f"Total Points for All Associations: {total_points}")
 
-# Create the top 8 associations diary
-top_8_diary = create_top_8_diary(total_points)
+# Get the top 8 associations with the highest points
+top_associations = get_top_associations(total_points)
+print(f"Top Associations: {top_associations}")
 
-# Print the top 8 associations diary
-print("Top 8 Associations Diary:")
-for association, points in top_8_diary.items():
-    print(f"Association: {association}, Points: {points}")
+# Get the name and file paths of all research files
+name_file_types = find_files_with_name(directory_to_search, '*Research*')
+print(f"Research Files: {name_file_types}")
 
-# Print the all file research diary
-print("All File Research Diary:")
-for filename, file_path in all_file_research_diary:
-    print(f"Filename: {filename}, File Path: {file_path}")
-
-# Print the namefile diary
-print("Namefile Diary:")
-for filename, file_path in namefile_diary.items():
-    print(f"Filename: {filename}, File Path: {file_path}")
+# Get the name and file paths of all files and folders
+all_file_types = list_all_files_and_folders(directory_to_search)
+print(f"All Files and Folders: {all_file_types}")
