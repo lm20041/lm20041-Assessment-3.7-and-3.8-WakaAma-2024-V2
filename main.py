@@ -80,14 +80,9 @@ all_association_points = []
 
 # Print matching files and extract information
 if matching_files:
-    print("Found the following files:")
     for filename, file_path in matching_files.items():
-        print(f"\nFilename: {filename}")
-        print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
-        print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
-        print(f"Association Points: {association_points}\n")
         all_association_points.append(association_points)
 else:
     print(f"No files found with {file_pattern} in the name.")
