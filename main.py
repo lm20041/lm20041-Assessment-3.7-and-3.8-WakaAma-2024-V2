@@ -54,6 +54,13 @@ def sum_up_points(all_association_points):
                 total_points[association] = points
     return total_points
 
+# Function to create the top 8 associations diary
+def create_top_8_diary(total_points):
+    sorted_associations = sorted(total_points.items(), key=lambda x: x[1], reverse=True)
+    top_8_associations = sorted_associations[:8]
+    num_other_associations = len(sorted_associations) - 8
+    return top_8_associations, num_other_associations
+
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Directory to search
 file_pattern = '*Final*'  # Pattern to match files
@@ -67,19 +74,43 @@ selected_files = random.sample(list(matching_files.values()), min(10, len(matchi
 # List to hold points from all files
 all_association_points = []
 
+# All file research diary
+all_file_research_diary = []
+
+# Namefile diary
+namefile_diary = {}
+
 # Print matching files and extract information
 if selected_files:
     print("Found the following files:")
     for file_path in selected_files:
+        filename = os.path.basename(file_path)
         print(f"\nFile Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
         print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
         print(f"Association Points: {association_points}\n")
         all_association_points.append(association_points)
+        all_file_research_diary.append((filename, file_path))
+        namefile_diary[filename] = file_path
 else:
     print(f"No files found with {file_pattern} in the name.")
 
 # Sum up points from all files
 total_points = sum_up_points(all_association_points)
 print(f"Total Points for All Associations: {total_points}")
+
+# Create the top 8 associations diary
+top_8_associations, num_other_associations = create_top_8_diary(total_points)
+print(f"Top 8 Associations: {top_8_associations}")
+print(f"Number of Other Associations: {num_other_associations}")
+
+# Print the all file research diary
+print("All File Research Diary:")
+for filename, file_path in all_file_research_diary:
+    print(f"Filename: {filename}, File Path: {file_path}")
+
+# Print the namefile diary
+print("Namefile Diary:")
+for filename, file_path in namefile_diary.items():
+    print(f"Filename: {filename}, File Path: {file_path}")
