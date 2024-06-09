@@ -53,6 +53,7 @@ def sum_up_points(all_association_points):
             else:
                 total_points[association] = points
     return total_points
+
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Directory to search
 file_pattern = '*Final*'  # Pattern to match files
@@ -69,9 +70,8 @@ all_association_points = []
 # Print matching files and extract information
 if selected_files:
     print("Found the following files:")
-    for filename, file_path in selected_files:
-        print(f"\nFilename: {filename}")
-        print(f"File Path: {file_path}")
+    for file_path in selected_files:
+        print(f"\nFile Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
         print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
