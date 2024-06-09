@@ -1,5 +1,6 @@
 import os
 import fnmatch
+import random
 
 # Function to find files with a specific name pattern
 def find_files_with_name(directory, pattern):
@@ -59,13 +60,16 @@ file_pattern = '*Final*'  # Pattern to match files
 # Find files
 matching_files = find_files_with_name(directory_to_search, file_pattern)
 
+# Select up to 10 random files from the matching files
+selected_files = random.sample(list(matching_files.values()), min(10, len(matching_files)))
+
 # List to hold points from all files
 all_association_points = []
 
 # Print matching files and extract information
-if matching_files:
+if selected_files:
     print("Found the following files:")
-    for filename, file_path in matching_files.items():
+    for filename, file_path in selected_files.items():
         print(f"\nFilename: {filename}")
         print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
