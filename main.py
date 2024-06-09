@@ -69,7 +69,7 @@ all_association_points = []
 # Print matching files and extract information
 if selected_files:
     print("Found the following files:")
-    for filename, file_path in selected_files.items():
+    for filename, file_path in selected_files:
         print(f"\nFilename: {filename}")
         print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
