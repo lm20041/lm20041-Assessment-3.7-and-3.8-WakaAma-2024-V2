@@ -1,6 +1,5 @@
 import os
 import fnmatch
-import random
 
 # Function to find files with a specific name pattern
 def find_files_with_name(directory, pattern):
@@ -58,8 +57,7 @@ def sum_up_points(all_association_points):
 def create_top_8_diary(total_points):
     sorted_associations = sorted(total_points.items(), key=lambda x: x[1], reverse=True)
     top_8_associations = sorted_associations[:8]
-    num_other_associations = len(sorted_associations) - 8
-    return top_8_associations, num_other_associations
+    return {assoc: points for assoc, points in top_8_associations}
 
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Directory to search
@@ -67,9 +65,6 @@ file_pattern = '*Final*'  # Pattern to match files
 
 # Find files
 matching_files = find_files_with_name(directory_to_search, file_pattern)
-
-# Select up to 10 random files from the matching files
-selected_files = random.sample(list(matching_files.values()), min(10, len(matching_files)))
 
 # List to hold points from all files
 all_association_points = []
@@ -81,11 +76,11 @@ all_file_research_diary = []
 namefile_diary = {}
 
 # Print matching files and extract information
-if selected_files:
+if matching_files:
     print("Found the following files:")
-    for file_path in selected_files:
-        filename = os.path.basename(file_path)
-        print(f"\nFile Path: {file_path}")
+    for filename, file_path in matching_files.items():
+        print(f"\nFilename: {filename}")
+        print(f"File Path: {file_path}")
         extracted_data = extract_information_from_file(file_path)
         print(f"Extracted Data: {extracted_data}")  # Debugging statement
         association_points = analyse_file_data(extracted_data)
@@ -101,9 +96,12 @@ total_points = sum_up_points(all_association_points)
 print(f"Total Points for All Associations: {total_points}")
 
 # Create the top 8 associations diary
-top_8_associations, num_other_associations = create_top_8_diary(total_points)
-print(f"Top 8 Associations: {top_8_associations}")
-print(f"Number of Other Associations: {num_other_associations}")
+top_8_diary = create_top_8_diary(total_points)
+
+# Print the top 8 associations diary
+print("Top 8 Associations Diary:")
+for association, points in top_8_diary.items():
+    print(f"Association: {association}, Points: {points}")
 
 # Print the all file research diary
 print("All File Research Diary:")
