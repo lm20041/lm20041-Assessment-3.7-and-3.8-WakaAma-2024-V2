@@ -61,12 +61,12 @@ class ResultsExport:
     self.heading_label.grid(row=0, columnspan=3)
     # row1 text
     txt = "On the left hand side you will see a table graph showing the ten places associated from the race. These associated house teams as you would surely know and their points have been total up. on the right hand side will display all the files from the folder you chose to research. Be free to open up a file by clicking on it to see the data recorded from it's races."
-    self.text_label = Label(self.parent_frame, text=txt, font=text_font_6, wraplength=350, bg=self.background)
+    self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
     self.text_label.grid(row=1, columnspan=3)
     # row 2 frame
     # row 3 text
     txt2 = "if you want to save your table results into this folder please enter a name in name your results or just press the exploit button in a default name will be set for your file."
-    self.text2_label = Label(self.parent_frame, text=txt2, font=text_font_6, wraplength=350, bg=self.background)
+    self.text2_label = Label(self.parent_frame, text=txt2, font=self.text_font_6, wraplength=350, bg=self.background)
     self.text2_label.grid(row=1, columnspan=3)
     # row 4 label, entry box, button
     self.Label(self.parent_frame, text="name your results:", font=self.text_font_12, bg=self.background).grid(row=4, column=0, sticky=W, padx=5)
@@ -74,15 +74,15 @@ class ResultsExport:
     self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries).grid(row=4, column=2)
 
     # row 5 error message
-    self.error_label = Label(self.parent_frame, text="", font=text_font_6,wraplength=400, bg=self.background, fg="red")
+    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=4, columnspan=3)
     # row 6 button
-    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.close_resultsexport)
+    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=partial(self.close_resultsexport, partner))
     self.end_program_button.grid(row=6, column=0)
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=6, column=2)
   def close_resultsexport(self, partner):
-    partner.to_password_button.config(state=NORMAL)
+    partner.to_resultsexport_button.config(state=NORMAL)
     self.resultsexport_box.destroy()
   
   def to_help(self):
