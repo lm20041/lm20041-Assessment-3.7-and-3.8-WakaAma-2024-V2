@@ -21,12 +21,15 @@ class Convertor:
     self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
     self.heading_label.grid(row=0)
     # row5 Create buttons
-    self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
+    self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_resultsexport)
     self.check_button.grid(row=5, ccolumn=0)
-    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=5, ccolumn=1)
-  def to_password(self):
-    Password(self)
+  def to_resultsexport(self):
+    ResultsExport(self)
+  def to_help(self):
+    pass
+    #Help(self)
 class ResultsExport:
   def __init__(self, partner):
     #vars
@@ -74,10 +77,17 @@ class ResultsExport:
     self.error_label = Label(self.parent_frame, text="", font=text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=4, columnspan=3)
     # row 6 button
-    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.close_resultsexport)
     self.end_program_button.grid(row=6, ccolumn=0)
-    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=6, ccolumn=2)
+  def close_resultsexport(self, partner):
+    partner.to_password_button.config(state=NORMAL)
+    self.resultsexport_box.destroy()
+  
+  def to_help(self):
+    pass
+    #Help(self)
 if __name__ == "__main__":
   root = Tk()
   app = Convertor(root)
