@@ -78,3 +78,7 @@ class ResultsExport:
     self.end_program_button.grid(row=6, ccolumn=0)
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
     self.help_button.grid(row=6, ccolumn=2)
+if __name__ == "__main__":
+  root = Tk()
+  app = Convertor(root)
+  root.mainloop()
