@@ -21,8 +21,8 @@ class Convertor:
     self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
     self.heading_label.grid(row=0)
     # row5 Create buttons
-    self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_resultsexport)
-    self.check_button.grid(row=5, column=0)
+    self.to_resultsexport_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_resultsexport)
+    self.to_resultsexport_button.grid(row=5, column=0)
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=5, column=1)
   def to_resultsexport(self):
