@@ -45,15 +45,19 @@ class TableGraph(tk.Tk):
         self.tree.tag_configure('oddrow', background='white')
         self.tree.tag_configure('evenrow', background='#f0f0f0')
 
-        # Add style for borders
-        self.add_borders()
+        # Add grid lines between cells
+        self.add_grid_lines()
 
-    def add_borders(self):
+    def add_grid_lines(self):
+        # Add lines between rows to create a grid line effect
         style = ttk.Style(self)
-        style.layout("Treeview", [
-            ("Treeview.treearea", {"sticky": "nswe"})
-        ])
-        style.configure("Treeview", bordercolor="black", relief="solid", borderwidth=1)
+        style.configure("TreeviewSeparator", background="black", relief="solid")
+        self.tree.tag_configure('separator', background='black')
+
+        # Insert separators
+        children = self.tree.get_children()
+        for i in range(len(children) - 1):
+            self.tree.insert('', i*2+1, text='', tags=('separator',))
 
 if __name__ == "__main__":
     app = TableGraph(data)
