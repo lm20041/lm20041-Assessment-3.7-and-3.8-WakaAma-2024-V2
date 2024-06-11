@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 # Example data
 data = {
@@ -10,36 +11,29 @@ data = {
     'Points': [50, 70, 80, 60, 90, 30, 40, 85, 95, 65]
 }
 
-class BarChart(tk.Tk):
+class TableGraph(tk.Tk):
     def __init__(self, data):
         super().__init__()
-        self.title("Bar Chart")
-        self.geometry("800x600")
-        self.canvas = tk.Canvas(self, width=800, height=600, bg='white')
-        self.canvas.pack()
-        self.draw_chart(data)
+        self.title("Table Graph")
+        self.geometry("400x300")
 
-    def draw_chart(self, data):
-        associates = data['Associate']
-        points = data['Points']
+        self.tree = ttk.Treeview(self)
+        self.tree.pack(expand=True, fill=tk.BOTH)
 
-        # Define some parameters
-        bar_width = 40
-        spacing = 20
-        margin = 50
-        max_height = 400
-        max_points = max(points)
+        self.tree['columns'] = ('Points',)
 
-        # Draw bars
-        for i, (associate, point) in enumerate(zip(associates, points)):
-            x0 = margin + i * (bar_width + spacing)
-            y0 = margin + max_height - (point / max_points) * max_height
-            x1 = x0 + bar_width
-            y1 = margin + max_height
-            self.canvas.create_rectangle(x0, y0, x1, y1, fill="blue")
-            self.canvas.create_text((x0 + x1) / 2, y1 + 10, text=associate, anchor=tk.N, angle=45)
-            self.canvas.create_text((x0 + x1) / 2, y0 - 10, text=str(point), anchor=tk.S)
+        # Define column headings
+        self.tree.heading('#0', text='Associate', anchor=tk.W)
+        self.tree.heading('Points', text='Points', anchor=tk.W)
+
+        # Define column width and alignment
+        self.tree.column('#0', width=150, anchor=tk.W)
+        self.tree.column('Points', width=100, anchor=tk.W)
+
+        # Insert data into the tree
+        for associate, points in zip(data['Associate'], data['Points']):
+            self.tree.insert('', 'end', text=associate, values=(points,))
 
 if __name__ == "__main__":
-    app = BarChart(data)
+    app = TableGraph(data)
     app.mainloop()
