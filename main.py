@@ -1,97 +1,45 @@
-from tkinter import *
-from functools import partial
+import tkinter as tk
 
-class Convertor:
-  def __init__(self, master):
-    self.master = master #Using this in windows settings to allow easy placement of frames
-    self.master.title("Entry Password")
-    self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
-    self.text_font_6 = ("Arial", "12", "bold")
-    self.text_fg = "#FFFFFF"
-    self.background = "white"
-    self.parent_frame = Frame(self.master, bg=self.background)
-    self.parent_frame.grid(padx=10, pady=10)
+# Example data
+data = {
+    'Associate': [
+        'Associate_1', 'Associate_2', 'Associate_3', 'Associate_4',
+        'Associate_5', 'Associate_6', 'Associate_7', 'Associate_8',
+        'Associate_9', 'Associate_10'
+    ],
+    'Points': [50, 70, 80, 60, 90, 30, 40, 85, 95, 65]
+}
 
-    self.create_widgets()
-  def create_widgets(self):
-    #var
-    button_fg = "white"
-    button_bg = "#004C99"
-    # row 0 text
-    self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
-    self.heading_label.grid(row=0)
-    # row5 Create buttons
-    self.to_resultsexport_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_resultsexport)
-    self.to_resultsexport_button.grid(row=5, column=0)
-    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
-    self.help_button.grid(row=5, column=1)
-  def to_resultsexport(self):
-    ResultsExport(self)
-  def to_help(self):
-    pass
-    #Help(self)
-class ResultsExport:
-  def __init__(self, partner):
-    #vars
-    self.text_font_12 = ("Arial", "12", "bold")
-    self.text_font_6 = ("Arial", "6")
-    self.button_font = ("Arial", "10", "bold")
-    self.text_fg = "#FFFFFF"
-    self.background = "white"
-    self.resultsexport_box = Toplevel()
+class BarChart(tk.Tk):
+    def __init__(self, data):
+        super().__init__()
+        self.title("Bar Chart")
+        self.geometry("800x600")
+        self.canvas = tk.Canvas(self, width=800, height=600, bg='white')
+        self.canvas.pack()
+        self.draw_chart(data)
 
-    # disable to_resultsexport_button
-    partner.to_resultsexport_button.config(state=DISABLED)
+    def draw_chart(self, data):
+        associates = data['Associate']
+        points = data['Points']
 
-    # If users press cross at top, closes convertor and 'releases' convertor button
-    self.resultsexport_box.protocol('WM_DELETE_WINDOW', partial(self.close_resultsexport, partner))
+        # Define some parameters
+        bar_width = 40
+        spacing = 20
+        margin = 50
+        max_height = 400
+        max_points = max(points)
 
-    self.parent_frame = Frame(self.resultsexport_box, bg=self.background)
-    self.parent_frame.grid(padx=10, pady=10)
+        # Draw bars
+        for i, (associate, point) in enumerate(zip(associates, points)):
+            x0 = margin + i * (bar_width + spacing)
+            y0 = margin + max_height - (point / max_points) * max_height
+            x1 = x0 + bar_width
+            y1 = margin + max_height
+            self.canvas.create_rectangle(x0, y0, x1, y1, fill="blue")
+            self.canvas.create_text((x0 + x1) / 2, y1 + 10, text=associate, anchor=tk.N, angle=45)
+            self.canvas.create_text((x0 + x1) / 2, y0 - 10, text=str(point), anchor=tk.S)
 
-    self.create_widgets(partner)
-  def create_widgets(self, partner):
-    #var
-    button_fg = "white"
-    button_bg = "#004C99"
-    # Define entry labels
-    entry_labels = ["folder name:", "file name:"]
-    self.entry_boxes = []
-    # row0 text
-    self.heading_label = Label(self.parent_frame, text="Convertor", font=self.text_font_12, bg=self.background)
-    self.heading_label.grid(row=0, columnspan=3, padx=5, pady=(10, 0))
-    # row1 text
-    txt = "On the left hand side you will see a table graph showing the ten places associated from the race. These associated house teams as you would surely know and their points have been total up. on the right hand side will display all the files from the folder you chose to research. Be free to open up a file by clicking on it to see the data recorded from it's races."
-    self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
-    self.text_label.grid(row=1, columnspan=3, padx=5, pady=(5, 0))
-    # row 2 frame
-    # row 3 text
-    txt2 = "if you want to save your table results into this folder please enter a name in name your results or just press the exploit button in a default name will be set for your file."
-    self.text2_label = Label(self.parent_frame, text=txt2, font=self.text_font_6, wraplength=350, bg=self.background)
-    self.text2_label.grid(row=3, columnspan=3, padx=5, pady=(10, 0))
-    # row 4 label, entry box, button
-    self.entry_label = Label(self.parent_frame, text="name your results:", font=("Arial", "8", "bold"), bg=self.background).grid(row=4, column=0, sticky=W, pady=(10, 0))
-    self.entry_box = Entry(self.parent_frame, font=self.text_font_6).grid(row=4, column=1, padx=(5,0), pady=(10, 0))
-    self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.button_font, command=self.export_results).grid(row=4, padx=5, pady=(10, 0), column=2)
-
-    # row 5 error message
-    self.error_label = Label(self.parent_frame, text="error:", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
-    self.error_label.grid(row=5, columnspan=3, padx=5, pady=(10, 0))
-    # row 6 button
-    self.end_program_button = Button(self.parent_frame, width=10, height=1, text="End Program", bg="black", fg=button_fg, font=self.button_font, command=partial(self.close_resultsexport, partner))
-    self.end_program_button.grid(row=6, column=0, padx=5, pady=10)
-    self.help_button = Button(self.parent_frame, width=10, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.button_font, command=self.to_help)
-    self.help_button.grid(row=6, column=2, padx=5, pady=10)
-  def export_results(self):
-    pass
-  def close_resultsexport(self, partner):
-    partner.to_resultsexport_button.config(state=NORMAL)
-    self.resultsexport_box.destroy()
-  
-  def to_help(self):
-    pass
-    #Help(self)
 if __name__ == "__main__":
-  root = Tk()
-  app = Convertor(root)
-  root.mainloop()
+    app = BarChart(data)
+    app.mainloop()
