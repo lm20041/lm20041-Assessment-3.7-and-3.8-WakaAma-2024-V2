@@ -2,6 +2,7 @@ import tkinter as tk
 
 # Example data
 data = {
+    'place': ['1st','2st','3st','4st','5st','6st','7st','8st'],
     'Associate': [
         'Associate_1', 'Associate_2', 'Associate_3', 'Associate_4',
         'Associate_5', 'Associate_6', 'Associate_7', 'Associate_8',
@@ -29,9 +30,9 @@ class TableGraph(tk.Tk):
         self.draw_headers()
 
         # Draw rows
-        for i, (associate, points) in enumerate(zip(data['Associate'], data['Points'])):
+        for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 1) * self.row_height
-            self.draw_row(y, associate, points)
+            self.draw_row(y, place, associate, points)
 
     def draw_headers(self):
         for col, header in enumerate(self.headers):
@@ -41,9 +42,9 @@ class TableGraph(tk.Tk):
         # Draw the bottom line of the header
         self.canvas.create_line(0, self.row_height, sum(self.column_widths), self.row_height, fill="black")
 
-    def draw_row(self, y, associate, points):
+    def draw_row(self, y, place, associate, points):
         # Draw cells
-        for col, value in enumerate([associate, points]):
+        for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
             self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
