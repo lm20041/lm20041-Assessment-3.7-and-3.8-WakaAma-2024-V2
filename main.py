@@ -19,8 +19,8 @@ class TableGraph(tk.Tk):
         self.canvas.pack(expand=True, fill=tk.BOTH)
 
         self.row_height = 30
-        self.column_widths = [100, 60]
-        self.headers = ['Associate', 'Points']
+        self.column_widths = [60,100, 60]
+        self.headers = ['place','Associate', 'total Points']
 
         self.create_table(data)
 
