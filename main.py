@@ -26,6 +26,9 @@ class TableGraph(tk.Tk):
         self.create_table(data)
 
     def create_table(self, data):
+        # Draw extra row on top
+        self.draw_extra_row()
+        
         # Draw headers
         self.draw_headers()
 
@@ -33,7 +36,18 @@ class TableGraph(tk.Tk):
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 1) * self.row_height
             self.draw_row(y, place, associate, points)
+    def draw_extra_row(self):
+        # Define the extra row content and position
+        x_start = 0
+        y_start = 0
+        x_end = sum(self.column_widths)
+        y_end = self.row_height
 
+        # Draw the rectangle using those x, y points
+        self.canvas.create_rectangle(x_start, y_start, x_end, y_end)
+        # Draw the text centered in the row
+        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+    
     def draw_headers(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
