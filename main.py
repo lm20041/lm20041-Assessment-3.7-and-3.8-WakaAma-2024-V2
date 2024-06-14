@@ -46,12 +46,12 @@ class TableGraph(tk.Tk):
         # Draw the rectangle using those x, y points
         self.canvas.create_rectangle(x_start, y_start, x_end, y_end)
         # Draw the text centered in the row
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"), fill="#CCCCCC", outline="black", width=1)
     
     def draw_headers(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
-            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
+            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="#EDEDED", outline="black", width=1)
             self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
         self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
 
