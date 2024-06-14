@@ -6,18 +6,14 @@ def Create_file_type_all(folder):
   for root, _, files in os.walk(folder):
     for filename in files:
       file_path = os.path.join(root, filename)
-      file_type_all.append({
-              filename: file_path
-      })
+      file_type_all[filename] = file_path 
   return file_type_all
 
-def Create_file_type_match(directory, pattern):
+def Create_file_type_match(file_dict, pattern):
   file_type_match = {}
-  for filename in fnmatch.filter(directory, pattern):
-    file_path = directory[filename]
-    file_type_match.append({
-              filename: file_path
-    })
+  for filename in fnmatch.filter(file_dict.keys(), pattern): 
+    file_path = file_dict[filename]
+    file_type_match[filename] = file_path
   return file_type_match
 
 # Specify the directory to search and the pattern
