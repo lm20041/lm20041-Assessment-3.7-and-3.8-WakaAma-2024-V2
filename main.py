@@ -59,7 +59,7 @@ class TableGraph(tk.Tk):
         # Draw cells
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
-            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
+            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10), wrap=20)
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
 
 if __name__ == "__main__":
