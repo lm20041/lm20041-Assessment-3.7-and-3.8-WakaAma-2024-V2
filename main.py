@@ -29,7 +29,7 @@ def Create_file_type_match(file_dict, pattern):
 # Load file icons
 file_icon_path = "file-icon.png"  # Replace with your file icon path
 file_icon = PhotoImage(file=file_icon_path)
-file_icon_reside = file_icon.subsample(2, 2)  # Adjust the subsampling factors as needed
+file_icon_reside = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
 
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
@@ -40,7 +40,7 @@ file_type_all = Create_file_type_all(directory_to_search)
 file_type_match = Create_file_type_match(file_type_all, file_pattern)
 
 
-for file_name, file_path in file_type_match:
+for file_name, file_path in file_type_match.items():
     text_box.image_create(tk.END, image=file_icon_reside)
     text_box.insert(tk.END, f" {file_name}\n{file_path}")
 
