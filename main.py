@@ -1,5 +1,15 @@
+import tkinter as tk
+from tkinter import PhotoImage
 import os #open file
 import fnmatch #search for file name
+
+# Create the main window
+root = tk.Tk()
+root.title("Text Box with File Icons")
+
+# Create a Text widget
+text_box = tk.Text(root, width=40, height=10)
+text_box.pack(pady=20, padx=20)
 
 def Create_file_type_all(folder):
   file_type_all = {}
@@ -16,6 +26,11 @@ def Create_file_type_match(file_dict, pattern):
     file_type_match[filename] = file_path
   return file_type_match
 
+# Load file icons
+file_icon_path = "file-icon.png"  # Replace with your file icon path
+file_icon = PhotoImage(file=file_icon_path)
+file_icon_reside = file_icon.subsample(2, 2)  # Adjust the subsampling factors as needed
+
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
 file_pattern = '*Final*'  # Pattern to match files containing "flower" in their name
@@ -23,8 +38,11 @@ file_pattern = '*Final*'  # Pattern to match files containing "flower" in their 
 # Find files
 file_type_all = Create_file_type_all(directory_to_search)
 file_type_match = Create_file_type_match(file_type_all, file_pattern)
-# Print matching files
-if file_type_all:
-  print(f"file_type_all: {file_type_all}")
-if file_type_match:
-  print(f"file_type_match: {file_type_match}")
+
+
+for file_name, file_path in file_type_match:
+    text_box.image_create(tk.END, image=file_icon_reside)
+    text_box.insert(tk.END, f" {file_name}\n{file_path}")
+
+# Run the application
+root.mainloop()
