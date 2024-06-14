@@ -44,9 +44,9 @@ class TableGraph(tk.Tk):
         y_end = self.row_height
 
         # Draw the rectangle using those x, y points
-        self.canvas.create_rectangle(x_start, y_start, x_end, y_end)
+        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="#CCCCCC", outline="black", width=1)
         # Draw the text centered in the row
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"), fill="#CCCCCC", outline="black", width=1)
+        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
     
     def draw_headers(self):
         for col, header in enumerate(self.headers):
