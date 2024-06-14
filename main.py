@@ -1,67 +1,28 @@
 import tkinter as tk
+from tkinter import PhotoImage
 
-# Example data
-data = {
-    'place': ['1st','2st','3st','4st','5st','6st','7st','8st'],
-    'Associate': [
-        'Associate_1', 'Associate_2', 'Associate_3', 'Associate_4',
-        'Associate_5', 'Associate_6', 'Associate_7', 'Associate_8',
-        'Associate_9', 'Associate_10'
-    ],
-    'Points': [50, 70, 80, 60, 90, 30, 40, 85, 95, 65]
-}
+# Create the main window
+root = tk.Tk()
+root.title("Text Box with File Icons")
 
-class TableGraph(tk.Tk):
-    def __init__(self, data):
-        super().__init__()
-        self.title("Table Graph")
-        self.geometry("400x300")
-        self.canvas = tk.Canvas(self, bg="white")
-        self.canvas.pack(expand=True, fill=tk.BOTH)
+# Create a Text widget
+text_box = tk.Text(root, width=40, height=10)
+text_box.pack(pady=20, padx=20)
 
-        self.row_height = 30
-        self.column_widths = [60,100, 60]
-        self.headers = ['place','Associate', 'total Points']
+# Load file icons
+file_icon_path = "file-icon.png"  # Replace with your file icon path
+file_icon = PhotoImage(file=file_icon_path)
 
-        self.create_table(data)
+# Insert file icons and text into the Text widget
+file_items = [
+    ("Document1.txt", file_icon),
+    ("Image1.png", file_icon),
+    ("Presentation1.pptx", file_icon)
+]
 
-    def create_table(self, data):
-        # Draw extra row on top
-        self.draw_extra_row()
-        
-        # Draw headers
-        self.draw_headers()
+for file_name, icon in file_items:
+    text_box.image_create(tk.END, image=icon)
+    text_box.insert(tk.END, f" {file_name}\n")
 
-        # Draw rows
-        for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
-            y = (i + 2) * self.row_height
-            self.draw_row(y, place, associate, points)
-    def draw_extra_row(self):
-        # Define the extra row content and position
-        x_start = 0
-        y_start = 0
-        x_end = sum(self.column_widths)
-        y_end = self.row_height
-
-        # Draw the rectangle using those x, y points
-        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="#CCCCCC", outline="black", width=1)
-        # Draw the text centered in the row
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
-    
-    def draw_headers(self):
-        for col, header in enumerate(self.headers):
-            x = sum(self.column_widths[:col])
-            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="#EDEDED", outline="black", width=1)
-            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
-        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
-
-    def draw_row(self, y, place, associate, points):
-        # Draw cells
-        for col, value in enumerate([place, associate, points]):
-            x = sum(self.column_widths[:col])
-            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10), wrap=20)
-            self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
-
-if __name__ == "__main__":
-    app = TableGraph(data)
-    app.mainloop()
+# Run the application
+root.mainloop()
