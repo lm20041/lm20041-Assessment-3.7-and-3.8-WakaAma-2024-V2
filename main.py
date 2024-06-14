@@ -34,7 +34,7 @@ class TableGraph(tk.Tk):
 
         # Draw rows
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
-            y = (i + 1) * self.row_height
+            y = (i + 2) * self.row_height
             self.draw_row(y, place, associate, points)
     def draw_extra_row(self):
         # Define the extra row content and position
@@ -51,10 +51,9 @@ class TableGraph(tk.Tk):
     def draw_headers(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
-            self.canvas.create_text(x + self.column_widths[col] / 2, self.row_height / 2, text=header, font=("Arial", 10, "bold"))
-            self.canvas.create_rectangle(x, 0, x + self.column_widths[col], self.row_height, outline="black", width=1)
-        # Draw the bottom line of the header
-        self.canvas.create_line(0, self.row_height, sum(self.column_widths), self.row_height, fill="black")
+            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
+            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
+        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
 
     def draw_row(self, y, place, associate, points):
         # Draw cells
