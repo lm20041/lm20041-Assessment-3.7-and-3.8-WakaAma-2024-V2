@@ -12,7 +12,7 @@ text_box.pack(pady=20, padx=20)
 # Load file icons
 file_icon_path = "file-icon.png"  # Replace with your file icon path
 file_icon = PhotoImage(file=file_icon_path)
-file_icon_reside = file_icon.subsample(2, 2)  # Adjust the subsampling factors as needed
+file_icon_reside = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
 
 
 # Insert file icons and text into the Text widget
