@@ -26,7 +26,7 @@ class Convertor:
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=5, column=1)
   def to_password(self):
-    Password(self)
+    ResultsExport(self)
   def to_help(self):
     pass
 class ResultsExport:
