@@ -63,7 +63,7 @@ class ResultsExport:
     self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.export).grid(row=4, column=2)
 
     # row 5 error message
-    self.error_label = Label(self.parent_frame, text="", font=text_font_6,wraplength=400, bg=self.background, fg="red")
+    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=4, columnspan=3)
     # row 6 button
     self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.end_program)
