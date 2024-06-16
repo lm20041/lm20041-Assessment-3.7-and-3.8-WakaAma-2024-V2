@@ -21,11 +21,11 @@ class Convertor:
     self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
     self.heading_label.grid(row=0)
     # row5 Create buttons
-    self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_password)
-    self.check_button.grid(row=5, column=0)
+    self.to_resultsexport_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_resultsexport)
+    self.to_resultsexport_button.grid(row=5, column=0)
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=5, column=1)
-  def to_password(self):
+  def to_resultsexport(self):
     ResultsExport(self)
   def to_help(self):
     pass
@@ -42,7 +42,7 @@ class ResultsExport:
     partner.to_resultsexport_button.config(state=DISABLED)
 
     # If users press cross at top, closes convertor and 'releases' convertor button
-    self.resultsexport_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
+    self.resultsexport_box.protocol('WM_DELETE_WINDOW', partial(self.close_resultsexport, partner))
 
     self.parent_frame = Frame(self.resultsexport_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
@@ -60,16 +60,25 @@ class ResultsExport:
     # row 4 label, entry box, button
     self.Label(self.parent_frame, text="name your results:", font=self.text_font_12, bg=self.background).grid(row=4, column=0, sticky=W, padx=5)
     self.entry_box = Entry(self.parent_frame, font=self.text_font_6).grid(row=4, column=1, padx=5)
-    self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries).grid(row=4, column=2)
+    self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.export).grid(row=4, column=2)
 
     # row 5 error message
     self.error_label = Label(self.parent_frame, text="", font=text_font_6,wraplength=400, bg=self.background, fg="red")
     self.error_label.grid(row=4, columnspan=3)
     # row 6 button
-    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.end_program)
     self.end_program_button.grid(row=6, column=0)
-    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
     self.help_button.grid(row=6, column=2)
+  def export(self):
+    pass
+  def end_program(self):
+    pass
+  def to_help(self):
+    pass
+  def close_resultsexport(self, partner):
+    partner.to_resultsexport_button.config(state=NORMAL)
+    self.resultsexport_box.destroy()
 if __name__ == "__main__":
   root = Tk()
   app = Convertor(root)
