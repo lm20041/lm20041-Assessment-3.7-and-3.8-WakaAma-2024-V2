@@ -1,48 +1,76 @@
-import tkinter as tk
-from tkinter import PhotoImage
-import os #open file
-import fnmatch #search for file name
+from tkinter import *
+from functools import partial
 
-# Create the main window
-root = tk.Tk()
-root.title("Text Box with File Icons")
+class Convertor:
+  def __init__(self, master):
+    self.master = master #Using this in windows settings to allow easy placement of frames
+    self.master.title("Entry Password")
+    self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
+    self.text_font_6 = ("Arial", "12", "bold")
+    self.text_fg = "#FFFFFF"
+    self.background = "white"
+    self.parent_frame = Frame(self.master, bg=self.background)
+    self.parent_frame.grid(padx=10, pady=10)
 
-# Create a Text widget
-text_box = tk.Text(root, width=40, height=10)
-text_box.pack(pady=20, padx=20)
+    self.create_widgets()
+  def create_widgets(self):
+    #var
+    button_fg = "white"
+    button_bg = "#004C99"
+    # row 0 text
+    self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
+    self.heading_label.grid(row=0)
+    # row5 Create buttons
+    self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.to_password)
+    self.check_button.grid(row=5, column=0)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.to_help)
+    self.help_button.grid(row=5, column=1)
+  def to_password(self):
+    Password(self)
+  def to_help(self):
+    pass
+class ResultsExport:
+  def __init__(self, partner):
+    #vars
+    self.text_font_12 = ("Arial", "12", "bold")
+    self.text_font_6 = ("Arial", "6")
+    self.text_fg = "#FFFFFF"
+    self.background = "white"
+    self.resultsexport_box = Toplevel()
 
-def Create_file_type_all(folder):
-  file_type_all = {}
-  for root, _, files in os.walk(folder):
-    for filename in files:
-      file_path = os.path.join(root, filename)
-      file_type_all[filename] = file_path 
-  return file_type_all
+    # disable to_resultsexport_button
+    partner.to_resultsexport_button.config(state=DISABLED)
 
-def Create_file_type_match(file_dict, pattern):
-  file_type_match = {}
-  for filename in fnmatch.filter(file_dict.keys(), pattern): 
-    file_path = file_dict[filename]
-    file_type_match[filename] = file_path
-  return file_type_match
+    # If users press cross at top, closes convertor and 'releases' convertor button
+    self.resultsexport_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
 
-# Load file icons
-file_icon_path = "file-icon.png"  # Replace with your file icon path
-file_icon = PhotoImage(file=file_icon_path)
-file_icon_reside = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
+    self.parent_frame = Frame(self.resultsexport_box, bg=self.background)
+    self.parent_frame.grid(padx=10, pady=10)
 
-# Specify the directory to search and the pattern
-directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
-file_pattern = '*Final*'  # Pattern to match files containing "flower" in their name
+    self.create_widgets(partner)
+  def create_widgets(self, partner):
+    #var
+    button_fg = "white"
+    button_bg = "#004C99"
+    # Define entry labels
+    entry_labels = ["folder name:", "file name:"]
+    self.entry_boxes = []
+    # row 2 frame
 
-# Find files
-file_type_all = Create_file_type_all(directory_to_search)
-file_type_match = Create_file_type_match(file_type_all, file_pattern)
+    # row 4 label, entry box, button
+    self.Label(self.parent_frame, text="name your results:", font=self.text_font_12, bg=self.background).grid(row=4, column=0, sticky=W, padx=5)
+    self.entry_box = Entry(self.parent_frame, font=self.text_font_6).grid(row=4, column=1, padx=5)
+    self.Export_button = Button(self.parent_frame, width=8, height=1, text="Export", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries).grid(row=4, column=2)
 
-
-for file_name, file_path in file_type_match.items():
-    text_box.image_create(tk.END, image=file_icon_reside)
-    text_box.insert(tk.END, f" {file_name}\n{file_path}")
-
-# Run the application
-root.mainloop()
+    # row 5 error message
+    self.error_label = Label(self.parent_frame, text="", font=text_font_6,wraplength=400, bg=self.background, fg="red")
+    self.error_label.grid(row=4, columnspan=3)
+    # row 6 button
+    self.end_program_button = Button(self.parent_frame, width=8, height=1, text="End Program", bg="black", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.end_program_button.grid(row=6, column=0)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.help_button.grid(row=6, column=2)
+if __name__ == "__main__":
+  root = Tk()
+  app = Convertor(root)
+  root.mainloop()
