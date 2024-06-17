@@ -55,12 +55,12 @@ class Convertor:
 
   def to_resultsexport(self, file_all, file_match):
     print('<<<<<file_all>>>>')
-    for filename, file_path in file_all:
-      print(filename)
+    for filename, file_path in file_all.items():
+      print(f'file_all: {filename}')
       print(f'{file_path}\n\n')
     print('<<<<<file_match>>>>')
-    for filename, file_path in file_match:
-      print(filename)
+    for filename, file_path in file_match.items():
+      print(f'file_match: {filename}')
       print(f'{file_path}\n\n')
     #ResultsExport(self, file_all, file_match)
 
