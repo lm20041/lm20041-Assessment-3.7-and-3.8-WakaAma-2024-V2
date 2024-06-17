@@ -54,7 +54,15 @@ class Convertor:
     return file_type_match
 
   def to_resultsexport(self, file_all, file_match):
-    ResultsExport(self, file_all, file_match)
+    print('<<<<<file_all>>>>')
+    for filename, file_path in file_all:
+      print(filename)
+      print(f'{file_path}\n\n')
+    print('<<<<<file_match>>>>')
+    for filename, file_path in file_match:
+      print(filename)
+      print(f'{file_path}\n\n')
+    #ResultsExport(self, file_all, file_match)
 
   def to_help(self):
     pass
