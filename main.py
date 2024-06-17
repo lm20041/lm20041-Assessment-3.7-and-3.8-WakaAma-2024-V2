@@ -148,23 +148,23 @@ class ResultsExport:
     return extracted_data
   def analyse_file_data(self, extracted_data):
     points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
-      association_points = {}
-      # Go through each associative and add their total points depending on place
-      for association, place in extracted_data.items():
-        if place in points:
-          if association in association_points:
-            association_points[association] += points[place]
-          else:
-            association_points[association] = points[place]
+    association_points = {}
+    # Go through each associative and add their total points depending on place
+    for association, place in extracted_data.items():
+      if place in points:
+        if association in association_points:
+          association_points[association] += points[place]
+        else:
+          association_points[association] = points[place]
     return association_points
   def sum_up_points(self, all_association_points):
     total_points = {}
-      for association_points in all_association_points:
-        for association, points in association_points.items():
-          if association in total_points:
-            total_points[association] += points
-          else:
-            total_points[association] = points
+    for association_points in all_association_points:
+      for association, points in association_points.items():
+        if association in total_points:
+          total_points[association] += points
+        else:
+          total_points[association] = points
     return total_points
   def get_top_associations(self, total_points, top_n=8):
     sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
