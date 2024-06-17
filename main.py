@@ -113,7 +113,7 @@ class ResultsExport:
 
         extracted_data = self.extracted_file_data(file_match)
         association_points = self.analyse_file_data(extracted_data)
-        all_association_points = self.sum_up_points([association_points])
+        all_association_points = self.sum_up_points( association_points)
         top_associations = self.get_top_associations(all_association_points, top_n)
 
         row = 0
