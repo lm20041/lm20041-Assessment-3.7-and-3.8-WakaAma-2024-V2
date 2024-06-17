@@ -130,7 +130,7 @@ class ResultsExport:
     #
   def extracted_file_data(self, file_match):
     extracted_data = {}
-    for file_type_all[filename] in file_match:
+    for filename, file_path in file_match.items():
       with open(file_path, 'r') as file:
         # Strip top line
         first_line = file.readline().strip()
@@ -180,11 +180,6 @@ class ResultsExport:
   def close_resultsexport(self, partner):
     partner.to_resultsexport_button.config(state=NORMAL)
     self.resultsexport_box.destroy()
-if __name__ == "__main__":
-  root = Tk()
-  app = Convertor(root)
-  root.mainloop()
-
 if __name__ == "__main__":
   root = Tk()
   app = Convertor(root)
