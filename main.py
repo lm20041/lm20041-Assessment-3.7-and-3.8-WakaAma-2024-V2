@@ -103,14 +103,80 @@ class ResultsExport:
   def create_table(self, file_match):
     pass
   def create_file_screen(self, file_match, file_all):
-    pass
+    print('<<<<<file_all>>>>')
+    for filename, file_path in file_all.items():
+      print(f'file_all: {filename}')
+      print(f'{file_path}\n\n')
+    print('<<<<<file_match>>>>')
+    for filename, file_path in file_match.items():
+      print(f'file_match: {filename}')
+      print(f'{file_path}\n\n')
+
+  # row 2 frame
+  def create_table(self, file_match):
+    #var
+    button_fg = "white"
+    button_bg = "#004C99"
+    top_n=8
+    # child frame
+    self.table_frame = Frame(self.parent_frame, bg=self.background)
+    self.table_frame.grid(padx=10, pady=10)
+    # row 0 text
+    # row 1 fnmatch frame
+    extracted_data = self.extracted_file_data(file_match)
+    association_points = self.analyse_file_data(extracted_data)
+    all_association_points = self.sum_up_points(association_points)
+    top_association = self.get_top_associations(all_association_points, top_n)
+    #
+  def extracted_file_data(self, file_match):
+    extracted_data = {}
+    for file_type_all[filename] in file_match:
+      with open(file_path, 'r') as file:
+        # Strip top line
+        first_line = file.readline().strip()
+        remaining_lines = file.readlines()
+        # Extract data from remaining lines
+        for line in remaining_lines:
+          parts = line.strip().split(',') # Split line by ','
+          if len(parts) >= 6:  # Ensure there are enough parts
+            try:
+              Place = int(parts[0])  # Convert Place to integer
+              Association = parts[5].strip()  # Strip any extra whitespace
+              extracted_data[Association] = Place
+            except ValueError:
+              print(f"Invalid data in line: {line.strip()}")  # Handle invalid data
+    return extracted_data
+  def analyse_file_data(self, extracted_data):
+    points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
+      association_points = {}
+      # Go through each associative and add their total points depending on place
+      for association, place in extracted_data.items():
+        if place in points:
+          if association in association_points:
+            association_points[association] += points[place]
+          else:
+            association_points[association] = points[place]
+    return association_points
+  def sum_up_points(self, all_association_points):
+    total_points = {}
+      for association_points in all_association_points:
+        for association, points in association_points.items():
+          if association in total_points:
+            total_points[association] += points
+          else:
+            total_points[association] = points
+    return total_points
+  def get_top_associations(self, total_points, top_n=8):
+    sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
+    top_associations = dict(sorted_associations[:top_n])
+    return top_associations
    
   def export(self):
-    pass
+    print('export')
   def end_program(self):
-    pass
+    print('end program')
   def to_help(self):
-    pass
+    print('help')
   def close_resultsexport(self, partner):
     partner.to_resultsexport_button.config(state=NORMAL)
     self.resultsexport_box.destroy()
