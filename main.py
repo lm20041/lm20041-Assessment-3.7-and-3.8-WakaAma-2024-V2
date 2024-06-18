@@ -152,14 +152,13 @@ class ResultsExport:
                     association_points[association] = points[place]
         return association_points
 
-    def sum_up_points(self, all_association_points):
+    def sum_up_points(self, association_points):
         total_points = {}
-        for association_points in all_association_points:
-            for association, points in association_points.items():
-                if association in total_points:
-                    total_points[association] += points
-                else:
-                    total_points[association] = points
+        for association, points in association_points.items():
+            if association in total_points:
+                total_points[association] += points
+            else:
+                total_points[association] = points
         return total_points
 
     def get_top_associations(self, total_points, top_n=8):
