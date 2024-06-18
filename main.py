@@ -106,18 +106,22 @@ class ResultsExport:
     def create_table(self, file_match):
         button_fg = "white"
         button_bg = "#004C99"
-        top_n = 8
 
         self.table_frame = Frame(self.parent_frame, bg=self.background)
         self.table_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
 
-        extracted_data = self.extracted_file_data(file_match)
-        association_points = self.analyse_file_data(extracted_data)
-        all_association_points = self.sum_up_points( association_points)
-        top_associations = self.get_top_associations(all_association_points, top_n)
-
+        #cal file data
+        self.cal_file_data(file_match)
+    def cal_file_data(self, file_match):
+        # var's
+        top_n = 8
+        self.extracted_data = self.extracted_file_data(file_match)
+        self.association_points = self.analyse_file_data(self.extracted_data)
+        self.all_association_points = self.sum_up_points(self.association_points)
+        self.top_association = self.get_top_associations(self.all_association_points, top_n)
+        #pirnt()
         row = 0
-        for association, points in top_associations.items():
+        for association, points in self.top_association.items():
             Label(self.table_frame, text=f"{association}: {points}", font=self.text_font_12, bg=self.background).grid(row=row, column=0, padx=5, pady=2)
             row += 1
 
