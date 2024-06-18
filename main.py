@@ -106,25 +106,38 @@ class ResultsExport:
     def create_table(self, file_match):
         button_fg = "white"
         button_bg = "#004C99"
-
+        top_n = 8
+    
         self.table_frame = Frame(self.parent_frame, bg=self.background)
         self.table_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
-
+        # table drawing
+        self.canvas = tk.Canvas(self, bg="white")
+        self.canvas.pack(expand=True, fill=tk.BOTH)
+        self.row_height = 30
+        self.column_widths = self.calculate_column_widths(data)
+        self.headers = ['Place', 'Associate', 'Total Points']
+    
         #cal file data
         self.cal_file_data(file_match)
+        # create table data
+        self.create_table_data(data)
     def cal_file_data(self, file_match):
-        # var's
-        top_n = 8
         self.extracted_data = self.extracted_file_data(file_match)
         self.association_points = self.analyse_file_data(self.extracted_data)
         self.all_association_points = self.sum_up_points(self.association_points)
         self.top_association = self.get_top_associations(self.all_association_points, top_n)
-        #pirnt()
-        row = 0
-        for association, points in self.top_association.items():
-            Label(self.table_frame, text=f"{association}: {points}", font=self.text_font_12, bg=self.background).grid(row=row, column=0, padx=5, pady=2)
-            row += 1
-
+    def create_table_data(self, data):
+        # Draw extra row on top
+        self.draw_extra_row()
+    
+        # Draw headers
+        self.draw_headers()
+    
+        # Draw rows
+        for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
+            y = (i + 2) * self.row_height
+            self.draw_row(y, place, associate, points)
+# <<<< CAL file data >>>>
     def extracted_file_data(self, file_match):
         extracted_data = {}
         for filename, file_path in file_match.items():
@@ -169,7 +182,45 @@ class ResultsExport:
         sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
         top_associations = dict(sorted_associations[:top_n])
         return top_associations
+#<<<<   draw table   >>>>>>
+    def calculate_column_widths(self, data):
+        # Calculate maximum content width for each column
+        max_widths = [
+            max(len(str(item)) for item in data[key]) for key in data.keys()
+        ]
+        # Ensure columns are wide enough for headers as well
+        header_widths = [len(header) for header in self.headers]
 
+        # Final column widths with some padding
+        column_widths = [max(content, header) * 10 + 10 for content, header in zip(max_widths, header_widths)]
+
+        return column_widths
+    def draw_extra_row(self):
+        # Define the extra row content and position
+        x_start = 0
+        y_start = 0
+        x_end = sum(self.column_widths)
+        y_end = self.row_height
+
+        # Draw the rectangle using those x, y points
+        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="#CCCCCC", outline="black", width=1)
+        # Draw the text centered in the row
+        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+    def draw_headers(self):
+        for col, header in enumerate(self.headers):
+            x = sum(self.column_widths[:col])
+            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="#EDEDED", outline="black", width=1)
+            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
+        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
+    def draw_row(self, y, place, associate, points):
+        # Draw cells
+        for col, value in enumerate([place, associate, points]):
+            x = sum(self.column_widths[:col])
+            wrapped_text = self.wrap_text(str(value), self.column_widths[col])
+            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 10), anchor="center")
+            self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
+
+#<<<<       >>>>>
     def export(self):
         print('export')
 
