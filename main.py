@@ -111,8 +111,8 @@ class ResultsExport:
         self.table_frame = Frame(self.parent_frame, bg=self.background)
         self.table_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
         # table drawing
-        self.canvas = tk.Canvas(self, bg="white")
-        self.canvas.pack(expand=True, fill=tk.BOTH)
+        self.canvas = Canvas(self.table_frame, bg="white")
+        self.canvas.pack(expand=True, fill=BOTH)
         self.row_height = 30
         self.column_widths = self.calculate_column_widths(data)
         self.headers = ['Place', 'Associate', 'Total Points']
