@@ -1,0 +1,10 @@
+Diary Entry
+
+Place: 1st, Associate: Associate_1, Points: 50
+Place: 2nd, Associate: Associate_2, Points: 70
+Place: 3rd, Associate: Associate_3, Points: 80
+Place: 4th, Associate: Associate_4, Points: 60
+Place: 5th, Associate: Associate_5, Points: 90
+Place: 6th, Associate: Associate_6, Points: 30
+Place: 7th, Associate: Associate_7, Points: 40
+Place: 8th, Associate: Associate_8, Points: 85
