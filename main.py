@@ -122,6 +122,7 @@ class ResultsExport:
 
         # create table data
         self.create_table_data(table_diary)
+
     def cal_file_data(self, file_match, top_n):
         self.extracted_data = self.extracted_file_data(file_match)
         self.association_points = self.analyse_file_data(self.extracted_data)
@@ -142,18 +143,21 @@ class ResultsExport:
             data['Associate'].append(associate)
             data['Points'].append(points)
         return data
+
     def create_table_data(self, data):
         # Draw extra row on top
         self.draw_extra_row()
-    
+
         # Draw headers
         self.draw_headers()
-    
+
         # Draw rows
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 2) * self.row_height
+            print(f"Drawing row at y={y} with place={place}, associate={associate}, points={points}")  # Debug statement
             self.draw_row(y, place, associate, points)
-# <<<< CAL file data >>>>
+
+    # <<<< CAL file data >>>>
     def extracted_file_data(self, file_match):
         extracted_data = {}
         for filename, file_path in file_match.items():
@@ -175,30 +179,36 @@ class ResultsExport:
         return extracted_data
 
     def analyse_file_data(self, extracted_data):
-        points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
         association_points = {}
         for association, place in extracted_data.items():
-            if place in points:
-                if association in association_points:
-                    association_points[association] += points[place]
-                else:
-                    association_points[association] = points[place]
+            points = self.place_to_points(place)
+            if association in association_points:
+                association_points[association].append(points)
+            else:
+                association_points[association] = [points]
         return association_points
 
     def sum_up_points(self, association_points):
-        total_points = {}
-        for association, points in association_points.items():
-            if association in total_points:
-                total_points[association] += points
-            else:
-                total_points[association] = points
+        total_points = {association: sum(points) for association, points in association_points.items()}
         return total_points
 
-    def get_top_associations(self, total_points, top_n=8):
-        sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
-        top_associations = dict(sorted_associations[:top_n])
+    def get_top_associations(self, total_points, top_n):
+        top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
         return top_associations
-#<<<<   draw table   >>>>>>
+
+    def place_to_points(self, place):
+        points_dict = {
+            1: 10,
+            2: 8,
+            3: 6,
+            4: 5,
+            5: 4,
+            6: 3,
+            7: 2,
+            8: 1
+        }
+        return points_dict.get(place, 0)
+
     def calculate_column_widths(self, data):
         # Calculate maximum content width for each column
         max_widths = [
@@ -211,30 +221,28 @@ class ResultsExport:
         column_widths = [max(content, header) * 10 + 10 for content, header in zip(max_widths, header_widths)]
 
         return column_widths
-    def draw_extra_row(self):
-        # Define the extra row content and position
-        x_start = 0
-        y_start = 0
-        x_end = sum(self.column_widths)
-        y_end = self.row_height
 
-        # Draw the rectangle using those x, y points
-        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="#CCCCCC", outline="black", width=1)
-        # Draw the text centered in the row
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+    def draw_extra_row(self):
+        # Placeholder for the top extra row
+        self.canvas.create_rectangle(0, 0, sum(self.column_widths), self.row_height, fill="#D3D3D3", outline="black", width=1)
+        self.canvas.create_text(sum(self.column_widths) / 2, self.row_height / 2, text="Extra Row", font=("Arial", 10, "bold"))
+
     def draw_headers(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
+            print(f"Drawing header '{header}' at x={x}")  # Debug statement
             self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="#EDEDED", outline="black", width=1)
-            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
-        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
+            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 8, "bold"))
+
     def draw_row(self, y, place, associate, points):
-        # Draw cells
-        for col, value in enumerate([place, associate, points]):
+        values = [place, associate, points]
+        for col, value in enumerate(values):
             x = sum(self.column_widths[:col])
-            wrapped_text = self.wrap_text(str(value), self.column_widths[col])
-            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 10), anchor="center")
+            print(f"Drawing cell with value='{value}' at x={x}, y={y}")  # Debug statement
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
+            wrapped_text = self.wrap_text(str(value), self.column_widths[col])
+            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 8))
+
     def wrap_text(self, text, width):
         # This is a simple implementation. You may need to adjust it according to your needs.
         words = text.split()
@@ -255,19 +263,19 @@ class ResultsExport:
             wrapped_lines.append(" ".join(current_line))
 
         return "\n".join(wrapped_lines)
-#<<<<       >>>>>
-    def export(self):
-        print('export')
-
-    def end_program(self):
-        print('end program')
-
-    def to_help(self):
-        print('help')
 
     def close_resultsexport(self, partner):
         partner.to_resultsexport_button.config(state=NORMAL)
         self.resultsexport_box.destroy()
+
+    def end_program(self):
+        root.destroy()
+
+    def to_help(self):
+        print("Help function not implemented yet.")
+
+    def export(self):
+        print("Export function not implemented yet.")
 
 if __name__ == "__main__":
     root = Tk()
