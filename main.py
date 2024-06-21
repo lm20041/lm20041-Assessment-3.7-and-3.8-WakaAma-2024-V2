@@ -116,7 +116,7 @@ class ResultsExport:
         self.canvas = Canvas(self.table_frame, bg="white")
         self.canvas.pack(expand=True, fill=BOTH)
         self.row_height = 30
-        self.column_widths = self.calculate_column_widths(data)
+        self.column_widths = self.calculate_column_widths(table_diary)
         self.headers = ['Place', 'Associate', 'Total Points']
 
         # create table data
