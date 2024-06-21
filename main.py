@@ -47,7 +47,7 @@ class CanvasTable:
         self.row_height = 30
         self.column_widths = [60, 100, 60]
         self.heading = 'full culb points'
-        self.headers = ['Place', 'Associate', 'Total Points']
+        self.headers = ['Place', 'Associate', ' Total\nPoints']
         # draw table
         self.draw_extra_row()
         self.draw_3_header()
