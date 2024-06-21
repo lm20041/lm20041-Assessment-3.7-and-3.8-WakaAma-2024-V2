@@ -55,7 +55,7 @@ class CanvasTable:
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
             self.draw_8_rows(y, place, associate, points)
-    def draw_extra_row():
+    def draw_extra_row(self):
         x_start = 0
         y_start = 0
         x_end = sum(self.column_widths)
@@ -63,7 +63,7 @@ class CanvasTable:
 
         self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="lightgreen", outline="black", width=1)
         self.canvas.create_text(x_end / 2, y_end / 2, text="Extra Row", font=("Arial", 10, "bold"))
-    def draw_3_header():
+    def draw_3_header(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
             self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
