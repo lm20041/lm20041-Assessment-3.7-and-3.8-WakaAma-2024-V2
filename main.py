@@ -50,7 +50,7 @@ class CanvasTable:
         self.headers = ['Place', 'Associate', 'Total Points']
         # draw table
         self.draw_extra_row()
-        self.draw_headers()
+        self.draw_3_header()
 
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
