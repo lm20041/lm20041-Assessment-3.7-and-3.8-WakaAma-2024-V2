@@ -6,8 +6,7 @@ data = {
     'place': ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'],
     'Associate': [
         'Associate_1', 'Associate_2', 'Associate_3', 'Associate_4',
-        'Associate_5', 'Associate_6', 'Associate_7', 'Associate_8',
-        'Associate_9', 'Associate_10'
+        'Associate_5', 'Associate_6', 'Associate_7', 'Associate_8'
     ],
     'Points': [50, 70, 80, 60, 90, 30, 40, 85, 95, 65]
 }
