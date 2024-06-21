@@ -31,10 +31,10 @@ class CanvasTable:
         button_fg = "white"
         button_bg = "#004C99"
         #frames
-        self.table_frame = Frame(self.parent_frame, bg=self.background)
-        self.table_frame.grid(row=1, column=0,padx=10 , pady=10)
-        self.file_frame = Frame(self.parent_frame, bg=self.background)
-        self.file_frame.grid(row=1, column=1,padx=10 , pady=10)
+        self.table_frame = Frame(self.parent_frame, bg="#FFFF99")
+        self.table_frame.grid(row=1, column=0, padx=(0, 5), pady=10, sticky="NSEW")
+        self.file_frame = Frame(self.parent_frame, bg="#B3FF66")
+        self.file_frame.grid(row=1, column=1, padx=(5, 0), pady=10, sticky="NSEW")
         # create_child_widgets
         self.create_table_widgets()
         self.create_file_widgets()
