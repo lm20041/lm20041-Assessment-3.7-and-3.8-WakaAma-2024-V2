@@ -40,7 +40,7 @@ class CanvasTable:
         self.create_file_widgets()
 #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
-        self.canvas = Canvas(self.table_frame, bg="white")
+        self.canvas = Canvas(self.table_frame)
         self.canvas.pack(expand=True, fill=BOTH)
          # table var's
         self.row_height = 30
