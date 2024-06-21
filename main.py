@@ -235,7 +235,26 @@ class ResultsExport:
             wrapped_text = self.wrap_text(str(value), self.column_widths[col])
             self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 10), anchor="center")
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
+    def wrap_text(self, text, width):
+        # This is a simple implementation. You may need to adjust it according to your needs.
+        words = text.split()
+        wrapped_lines = []
+        current_line = []
+        current_length = 0
 
+        for word in words:
+            if current_length + len(word) + len(current_line) > width // 10:  # Rough estimate
+                wrapped_lines.append(" ".join(current_line))
+                current_line = [word]
+                current_length = len(word)
+            else:
+                current_line.append(word)
+                current_length += len(word)
+
+        if current_line:
+            wrapped_lines.append(" ".join(current_line))
+
+        return "\n".join(wrapped_lines)
 #<<<<       >>>>>
     def export(self):
         print('export')
