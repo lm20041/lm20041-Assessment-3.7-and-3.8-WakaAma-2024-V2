@@ -1,4 +1,3 @@
-# unknown drag,  we need to work from scratch
 import os
 import fnmatch
 from tkinter import *
@@ -58,6 +57,7 @@ class Convertor:
 
 class ResultsExport:
     def __init__(self, partner, file_all, file_match):
+        self.headers = ['Place', 'Associate', 'Total Points']
         self.text_font_12 = ("Arial", "12", "bold")
         self.text_font_6 = ("Arial", "6")
         self.text_fg = "#FFFFFF"
@@ -79,7 +79,7 @@ class ResultsExport:
         self.create_table(file_match)
         self.create_file_screen(file_match, file_all)
 
-        self.entry_label = Label(self.parent_frame, text="Name your results:", font=self.text_font_12, bg=self.background)
+        self.entry_label = Label(self.parent_frame, text="Name your results:", font=self.text_font_12, bg=self.background) 
         self.entry_label.grid(row=4, column=0, sticky=W, padx=5)
         self.entry_box = Entry(self.parent_frame, font=self.text_font_6)
         self.entry_box.grid(row=4, column=1, padx=5)
@@ -108,25 +108,46 @@ class ResultsExport:
         button_fg = "white"
         button_bg = "#004C99"
         top_n = 8
-
+        #cal file data and create table diary
+        table_diary = self.cal_file_data(file_match, top_n)
+        # create table data
         self.table_frame = Frame(self.parent_frame, bg=self.background)
         self.table_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
         # table drawing
         self.canvas = Canvas(self.table_frame, bg="white")
         self.canvas.pack(expand=True, fill=BOTH)
         self.row_height = 30
-        self.column_widths = self.calculate_column_widths(data)
+        column_widths = self.calculate_column_widths(file_match)
+
+        # Other code remains the same but replace 'self.column_widths' with 'column_widths'
+        # ...
+        self.column_widths = column_widths  # Store in self if needed elsewhere
         self.headers = ['Place', 'Associate', 'Total Points']
 
-        #cal file data
-        self.cal_file_data(file_match)
         # create table data
-        self.create_table_data(data)
-    def cal_file_data(self, file_match):
+        self.create_table_data(table_diary)
+
+    def cal_file_data(self, file_match, top_n):
         self.extracted_data = self.extracted_file_data(file_match)
         self.association_points = self.analyse_file_data(self.extracted_data)
         self.all_association_points = self.sum_up_points(self.association_points)
         self.top_association = self.get_top_associations(self.all_association_points, top_n)
+        # Step 2: Sort the associates by points
+        sorted_associates = sorted(self.top_association.items(), key=lambda item: item[1], reverse=True)
+        # Step 3: Generate the diary entry data
+        places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th']
+        data = {
+            'place': [],
+            'Associate': [],
+            'Points': []
+        }
+        #
+        for place, (associate, points) in zip(places, sorted_associates):
+            data['place'].append(place)
+            data['Associate'].append(associate)
+            data['Points'].append(points)
+        return data
+
     def create_table_data(self, data):
         # Draw extra row on top
         self.draw_extra_row()
@@ -137,8 +158,10 @@ class ResultsExport:
         # Draw rows
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 2) * self.row_height
+            print(f"Drawing row at y={y} with place={place}, associate={associate}, points={points}")  # Debug statement
             self.draw_row(y, place, associate, points)
-# <<<< CAL file data >>>>
+
+    # <<<< CAL file data >>>>
     def extracted_file_data(self, file_match):
         extracted_data = {}
         for filename, file_path in file_match.items():
@@ -160,31 +183,38 @@ class ResultsExport:
         return extracted_data
 
     def analyse_file_data(self, extracted_data):
-        points = {1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1}
         association_points = {}
         for association, place in extracted_data.items():
-            if place in points:
-                if association in association_points:
-                    association_points[association] += points[place]
-                else:
-                    association_points[association] = points[place]
+            points = self.place_to_points(place)
+            if association in association_points:
+                association_points[association].append(points)
+            else:
+                association_points[association] = [points]
         return association_points
 
     def sum_up_points(self, association_points):
-        total_points = {}
-        for association, points in association_points.items():
-            if association in total_points:
-                total_points[association] += points
-            else:
-                total_points[association] = points
+        total_points = {association: sum(points) for association, points in association_points.items()}
         return total_points
 
-    def get_top_associations(self, total_points, top_n=8):
-        sorted_associations = sorted(total_points.items(), key=lambda item: item[1], reverse=True)
-        top_associations = dict(sorted_associations[:top_n])
+    def get_top_associations(self, total_points, top_n):
+        top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
         return top_associations
-#<<<<   draw table   >>>>>>
+
+    def place_to_points(self, place):
+        points_dict = {
+            1: 10,
+            2: 8,
+            3: 6,
+            4: 5,
+            5: 4,
+            6: 3,
+            7: 2,
+            8: 1
+        }
+        return points_dict.get(place, 0)
+
     def calculate_column_widths(self, data):
+        data = self.cal_file_data(data, top_n=8)  # Or any appropriate value for 'top_n'
         # Calculate maximum content width for each column
         max_widths = [
             max(len(str(item)) for item in data[key]) for key in data.keys()
@@ -196,44 +226,61 @@ class ResultsExport:
         column_widths = [max(content, header) * 10 + 10 for content, header in zip(max_widths, header_widths)]
 
         return column_widths
-    def draw_extra_row(self):
-        # Define the extra row content and position
-        x_start = 0
-        y_start = 0
-        x_end = sum(self.column_widths)
-        y_end = self.row_height
 
-        # Draw the rectangle using those x, y points
-        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="#CCCCCC", outline="black", width=1)
-        # Draw the text centered in the row
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+    def draw_extra_row(self):
+        # Placeholder for the top extra row
+        self.canvas.create_rectangle(0, 0, sum(self.column_widths), self.row_height, fill="#D3D3D3", outline="black", width=1)
+        self.canvas.create_text(sum(self.column_widths) / 2, self.row_height / 2, text="Extra Row", font=("Arial", 10, "bold"))
+
     def draw_headers(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
+            print(f"Drawing header '{header}' at x={x}")  # Debug statement
             self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="#EDEDED", outline="black", width=1)
-            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
-        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
+            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 8, "bold"))
+
     def draw_row(self, y, place, associate, points):
-        # Draw cells
-        for col, value in enumerate([place, associate, points]):
+        values = [place, associate, points]
+        for col, value in enumerate(values):
             x = sum(self.column_widths[:col])
-            wrapped_text = self.wrap_text(str(value), self.column_widths[col])
-            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 10), anchor="center")
+            print(f"Drawing cell with value='{value}' at x={x}, y={y}")  # Debug statement
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, outline="black", width=1)
+            wrapped_text = self.wrap_text(str(value), self.column_widths[col])
+            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=wrapped_text, font=("Arial", 8))
 
-#<<<<       >>>>>
-    def export(self):
-        print('export')
+    def wrap_text(self, text, width):
+        # This is a simple implementation. You may need to adjust it according to your needs.
+        words = text.split()
+        wrapped_lines = []
+        current_line = []
+        current_length = 0
 
-    def end_program(self):
-        print('end program')
+        for word in words:
+            if current_length + len(word) + len(current_line) > width // 10:  # Rough estimate
+                wrapped_lines.append(" ".join(current_line))
+                current_line = [word]
+                current_length = len(word)
+            else:
+                current_line.append(word)
+                current_length += len(word)
 
-    def to_help(self):
-        print('help')
+        if current_line:
+            wrapped_lines.append(" ".join(current_line))
+
+        return "\n".join(wrapped_lines)
 
     def close_resultsexport(self, partner):
         partner.to_resultsexport_button.config(state=NORMAL)
         self.resultsexport_box.destroy()
+
+    def end_program(self):
+        root.destroy()
+
+    def to_help(self):
+        print("Help function not implemented yet.")
+
+    def export(self):
+        print("Export function not implemented yet.")
 
 if __name__ == "__main__":
     root = Tk()
