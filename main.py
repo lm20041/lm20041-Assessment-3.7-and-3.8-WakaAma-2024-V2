@@ -76,7 +76,7 @@ class CanvasTable:
             self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
 #<<<<<      file_widgets       >>>>>
     def create_file_widgets(self): 
-        self.text_box = Text(file_frame, width=40, height=10)
+        self.text_box = Text(self.file_frame, width=40, height=10)
         self.text_box.pack(pady=20, padx=20)
 if __name__ == "__main__":
     root = Tk()
