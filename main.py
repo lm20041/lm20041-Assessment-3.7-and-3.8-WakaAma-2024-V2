@@ -57,6 +57,7 @@ class Convertor:
 
 class ResultsExport:
     def __init__(self, partner, file_all, file_match):
+        self.headers = ['Place', 'Associate', 'Total Points']
         self.text_font_12 = ("Arial", "12", "bold")
         self.text_font_6 = ("Arial", "6")
         self.text_fg = "#FFFFFF"
