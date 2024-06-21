@@ -32,9 +32,9 @@ class CanvasTable:
         button_fg = "white"
         button_bg = "#004C99"
         #frames
-        self.table_frame = Frame(parent_frame, bg=self.background)
+        self.table_frame = Frame(self.parent_frame, bg=self.background)
         self.table_frame.grid(row=1, column=0,padx=10 , pady=10)
-        self.file_frame = Frame(parent_frame, bg=self.background)
+        self.file_frame = Frame(self.parent_frame, bg=self.background)
         self.file_frame.grid(row=1, column=1,padx=10 , pady=10)
         # create_child_widgets
         self.create_table()
