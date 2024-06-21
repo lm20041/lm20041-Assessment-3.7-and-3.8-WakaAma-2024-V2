@@ -37,8 +37,8 @@ class CanvasTable:
         self.file_frame = Frame(self.parent_frame, bg=self.background)
         self.file_frame.grid(row=1, column=1,padx=10 , pady=10)
         # create_child_widgets
-        self.create_table()
-        self.create_file_screen()
+        self.create_table_widgets()
+        self.create_file_widgets()
 #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
         self.canvas = Canvas(self.table_frame, bg="white")
