@@ -79,7 +79,7 @@ class ResultsExport:
         self.create_table(file_match)
         self.create_file_screen(file_match, file_all)
 
-        self.entry_label = Label(self.parent_frame, text="Name your results:", font=self.text_font_12, bg=self.background)
+        self.entry_label = Label(self.parent_frame, text="Name your results:", font=self.text_font_12, bg=self.background) 
         self.entry_label.grid(row=4, column=0, sticky=W, padx=5)
         self.entry_box = Entry(self.parent_frame, font=self.text_font_6)
         self.entry_box.grid(row=4, column=1, padx=5)
@@ -117,7 +117,11 @@ class ResultsExport:
         self.canvas = Canvas(self.table_frame, bg="white")
         self.canvas.pack(expand=True, fill=BOTH)
         self.row_height = 30
-        self.column_widths = self.calculate_column_widths(table_diary)
+        column_widths = self.calculate_column_widths(file_match)
+
+        # Other code remains the same but replace 'self.column_widths' with 'column_widths'
+        # ...
+        self.column_widths = column_widths  # Store in self if needed elsewhere
         self.headers = ['Place', 'Associate', 'Total Points']
 
         # create table data
@@ -210,6 +214,7 @@ class ResultsExport:
         return points_dict.get(place, 0)
 
     def calculate_column_widths(self, data):
+        data = self.cal_file_data(data, top_n=8)  # Or any appropriate value for 'top_n'
         # Calculate maximum content width for each column
         max_widths = [
             max(len(str(item)) for item in data[key]) for key in data.keys()
@@ -221,7 +226,7 @@ class ResultsExport:
         column_widths = [max(content, header) * 10 + 10 for content, header in zip(max_widths, header_widths)]
 
         return column_widths
-
+    
     def draw_extra_row(self):
         # Placeholder for the top extra row
         self.canvas.create_rectangle(0, 0, sum(self.column_widths), self.row_height, fill="#D3D3D3", outline="black", width=1)
