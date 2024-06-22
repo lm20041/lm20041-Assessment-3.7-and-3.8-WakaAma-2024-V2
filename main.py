@@ -18,7 +18,7 @@ class CanvasTable:
         self.data = data
         # setting var's
         self.master.title("CanvasTable")
-        self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
+        self.master.configure(borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
         self.text_font_6 = ("Arial", "12", "bold")
         self.text_fg = "#FFFFFF"
         self.background = "white"
@@ -30,53 +30,68 @@ class CanvasTable:
     def create_widgets(self):
         button_fg = "white"
         button_bg = "#004C99"
-        #frames
+        # frames
         self.table_frame = Frame(self.parent_frame, bg="#FFFF99")
-        self.table_frame.grid(row=1, column=0, padx=(0, 5), pady=10, sticky="NSEW")
+        self.table_frame.grid(row=1, column=0, padx=(0, 5), pady=10, sticky="N")
         self.file_frame = Frame(self.parent_frame, bg="#B3FF66")
-        self.file_frame.grid(row=1, column=1, padx=(5, 0), pady=10, sticky="NSEW")
+        self.file_frame.grid(row=1, column=1, padx=(5, 0), pady=10, sticky="N")
         # create_child_widgets
         self.create_table_widgets()
         self.create_file_widgets()
-#<<<<<        table_widgets        >>>>>
+
+    #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
-        self.canvas = Canvas(self.table_frame)
-        self.canvas.pack(expand=True, fill=BOTH)
-         # table var's
+        # table var's
         self.row_height = 30
         self.column_widths = [60, 100, 60]
         self.heading = 'full culb points'
         self.headers = ['Place', 'Associate', ' Total\nPoints']
-        # draw table
+        self.num_rows = len(data['place'])
+        self.num_headers = len(self.headers)
+
+        # Calculate canvas dimensions
+        self.canvas_width = sum(self.column_widths)
+        self.canvas_height = (self.num_rows + 2) * self.row_height  # +2 for extra row and headers
+
+        # Create canvas with the exact size
+        self.canvas = Canvas(self.table_frame, width=self.canvas_width, height=self.canvas_height, bg="white")
+        self.canvas.pack(expand=False, fill=None)
+
+        # Draw table
         self.draw_extra_row()
         self.draw_3_header()
 
         for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
             y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
             self.draw_8_rows(y, place, associate, points)
+
     def draw_extra_row(self):
         x_start = 0
         y_start = 0
-        x_end = sum(self.column_widths)
+        x_end = self.canvas_width
         y_end = self.row_height
 
         self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="lightgreen", outline="black", width=1)
         self.canvas.create_text(x_end / 2, y_end / 2, text="Extra Row", font=("Arial", 10, "bold"))
+
     def draw_3_header(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
             self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
             self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
-        self.canvas.create_line(0, 2 * self.row_height, sum(self.column_widths), 2 * self.row_height, fill="black")
+        self.canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
+
     def draw_8_rows(self, y, place, associate, points):
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
             self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill="lightgray", outline="black", width=1)
             self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
-#<<<<<      file_widgets       >>>>>
-    def create_file_widgets(self): 
+
+    #<<<<<      file_widgets       >>>>>
+    def create_file_widgets(self):
         self.text_box = Text(self.file_frame, width=40, height=10)
         self.text_box.pack(pady=20, padx=20)
+
 if __name__ == "__main__":
     root = Tk()
     app = CanvasTable(root, data)
