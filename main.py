@@ -121,18 +121,18 @@ class CanvasTable:
         self.text_box.pack(pady=20, padx=20)
         # Insert files with icons into the Text widget
         for file_name, file_path in self.file_match.items():
-            text_box.image_create(tk.END, image=self.file_icon)
-            text_box.insert(tk.END, f" {file_name}\n")
+            self.text_box.image_create(tk.END, image=self.file_icon())
+            self.text_box.insert(tk.END, f" {file_name}\n")
 
         # Bind mouse click event to the text widget
-        text_box.tag_configure("filename", foreground="blue", underline=True)
-        text_box.tag_bind("filename", "<Button-1>", self.open_file)
+        self.text_box.tag_configure("filename", foreground="blue", underline=True)
+        self.text_box.tag_bind("filename", "<Button-1>", self.open_file)
 
         # Add tags to the filenames in the text box
         for file_name in file_type_match.keys():
-            start_idx = text_box.search(file_name, "1.0", tk.END)
+            start_idx = self.text_box.search(file_name, "1.0", tk.END)
             end_idx = f"{start_idx} + {len(file_name)}c"
-            text_box.tag_add("filename", start_idx, end_idx)
+            self.text_box.tag_add("filename", start_idx, end_idx)
     def file_icon(self):
         # Load file icons
         file_icon_path = "file-icon.png"  # Replace with your file icon path
@@ -140,17 +140,17 @@ class CanvasTable:
         file_icon_resized = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
         return file_icon_resized
     def open_file(self, event):
-        index = text_box.index(tk.CURRENT)
-        line_start = text_box.index(f"{index} linestart")
-        line_end = text_box.index(f"{index} lineend")
-        file_name = text_box.get(line_start, line_end).strip().split("\n")[0]
+        index = self.text_box.index(tk.CURRENT)
+        line_start = self.text_box.index(f"{index} linestart")
+        line_end = self.text_box.index(f"{index} lineend")
+        file_name = self.text_box.get(line_start, line_end).strip().split("\n")[0]
         file_path = file_type_match.get(file_name)
         if file_path:
             with open(file_path, 'r') as file:
                 file_data = file.read()
-            new_window = tk.Toplevel(root)
+            new_window = Toplevel(root)
             new_window.title(file_name)
-            new_text_box = tk.Text(new_window, width=40, height=10)
+            new_text_box = Text(new_window, width=40, height=10)
             new_text_box.pack(pady=20, padx=20)
             new_text_box.insert(tk.END, file_data)
 
