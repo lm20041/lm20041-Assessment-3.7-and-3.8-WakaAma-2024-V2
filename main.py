@@ -28,6 +28,7 @@ def Create_file_type_match(file_dict, pattern):
         file_path = file_dict[filename]
         file_type_match[filename] = file_path
     return file_type_match
+
 # Specify the directory to search and the pattern
 directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
 file_pattern = '*Final*'  # Pattern to match files containing "Final" in their name
@@ -121,8 +122,8 @@ class CanvasTable:
         self.text_box.pack(pady=20, padx=20)
         # Insert files with icons into the Text widget
         for file_name, file_path in self.file_match.items():
-            self.text_box.image_create(tk.END, image=self.file_icon())
-            self.text_box.insert(tk.END, f" {file_name}\n")
+            self.text_box.image_create(self.get_end_index(), image=self.file_icon())
+            self.text_box.insert(self.get_end_index(), f" {file_name}\n")
 
         # Bind mouse click event to the text widget
         self.text_box.tag_configure("filename", foreground="blue", underline=True)
@@ -130,17 +131,26 @@ class CanvasTable:
 
         # Add tags to the filenames in the text box
         for file_name in file_type_match.keys():
-            start_idx = self.text_box.search(file_name, "1.0", tk.END)
+            start_idx = self.text_box.search(file_name, "1.0", self.get_end_index())
             end_idx = f"{start_idx} + {len(file_name)}c"
             self.text_box.tag_add("filename", start_idx, end_idx)
+
+    def get_end_index(self):
+        """Get the end index of the text in the Text widget."""
+        num_lines = int(self.text_box.index('end-1c').split('.')[0])
+        last_line_length = len(self.text_box.get(f"{num_lines}.0", f"{num_lines}.end"))
+        end_index = f"{num_lines}.{last_line_length}"
+        return end_index
+
     def file_icon(self):
         # Load file icons
         file_icon_path = "file-icon.png"  # Replace with your file icon path
         file_icon = PhotoImage(file=file_icon_path)
         file_icon_resized = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
         return file_icon_resized
+
     def open_file(self, event):
-        index = self.text_box.index(tk.CURRENT)
+        index = self.text_box.index(CURRENT)
         line_start = self.text_box.index(f"{index} linestart")
         line_end = self.text_box.index(f"{index} lineend")
         file_name = self.text_box.get(line_start, line_end).strip().split("\n")[0]
@@ -152,7 +162,7 @@ class CanvasTable:
             new_window.title(file_name)
             new_text_box = Text(new_window, width=40, height=10)
             new_text_box.pack(pady=20, padx=20)
-            new_text_box.insert(tk.END, file_data)
+            new_text_box.insert(END, file_data)
 
 if __name__ == "__main__":
     root = Tk()
