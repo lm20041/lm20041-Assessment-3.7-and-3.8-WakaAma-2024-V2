@@ -4,7 +4,7 @@ from tkinter import PhotoImage
 import os
 import fnmatch
 
-# Example data
+# Example data for the table
 data = {
     'place': ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'],
     'Associate': [
@@ -14,36 +14,27 @@ data = {
     'Points': [50, 70, 80, 60, 90, 30, 40, 85, 95, 65]
 }
 
-def Create_file_type_all(folder):
-    file_type_all = {}
-    for root, _, files in os.walk(folder):
-        for filename in files:
-            file_path = os.path.join(root, filename)
-            file_type_all[filename] = file_path 
-    return file_type_all
+# Example data for two different lists
+file_list_1 = {
+    'file1_final.txt': 'path/to/file1_final.txt',
+    'file2_final.txt': 'path/to/file2_final.txt'
+}
 
-def Create_file_type_match(file_dict, pattern):
-    file_type_match = {}
-    for filename in fnmatch.filter(file_dict.keys(), pattern): 
-        file_path = file_dict[filename]
-        file_type_match[filename] = file_path
-    return file_type_match
-
-# Specify the directory to search and the pattern
-directory_to_search = 'waka_ama_db'  # Current directory; change this to the directory you want to search
-file_pattern = '*Final*'  # Pattern to match files containing "Final" in their name
-
-# Find files
-file_type_all = Create_file_type_all(directory_to_search)
-file_type_match = Create_file_type_match(file_type_all, file_pattern)
+file_list_2 = {
+    'file3_final.txt': 'path/to/file3_final.txt',
+    'file4_final.txt': 'path/to/file4_final.txt'
+}
 
 class CanvasTable:
-    def __init__(self, master, data, file_type_all, file_type_match):
+    def __init__(self, master, data, file_list_1, file_list_2):
         # input var's
         self.master = master
         self.data = data
-        self.file_all = file_type_all
-        self.file_match = file_type_match
+        self.file_list_1 = file_list_1
+        self.file_list_2 = file_list_2
+        self.current_list = file_list_1
+        # Initialize a list to store image references
+        self.image_refs = []  # This line initializes the list
         # setting var's
         self.master.title("CanvasTable")
         self.master.configure(borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
@@ -120,33 +111,42 @@ class CanvasTable:
         # Create a Text widget
         self.text_box = Text(self.file_frame, width=40, height=10)
         self.text_box.pack(pady=20, padx=20)
-        # Insert files with icons into the Text widget
-        for file_name, file_path in self.file_match.items():
-            self.text_box.image_create(self.get_end_index(), image=self.file_icon())
-            self.text_box.insert(self.get_end_index(), f" {file_name}\n")
+
+        # Buttons to switch lists
+        self.button1 = Button(self.file_frame, text="Show List 1", command=partial(self.update_file_list, self.file_list_1))
+        self.button1.pack(pady=5)
+        self.button2 = Button(self.file_frame, text="Show List 2", command=partial(self.update_file_list, self.file_list_2))
+        self.button2.pack(pady=5)
+
+        # Initially display the first list
+        self.update_file_list(self.file_list_1)
+
+    def update_file_list(self, file_list):
+        self.current_list = file_list
+        self.text_box.delete('1.0', END)
+        for file_name, file_path in file_list.items():
+            self.text_box.image_create(END, image=self.file_icon())
+            self.text_box.insert(END, f" {file_name}\n")
 
         # Bind mouse click event to the text widget
         self.text_box.tag_configure("filename", foreground="blue", underline=True)
         self.text_box.tag_bind("filename", "<Button-1>", self.open_file)
 
         # Add tags to the filenames in the text box
-        for file_name in file_type_match.keys():
-            start_idx = self.text_box.search(file_name, "1.0", self.get_end_index())
+        for file_name in file_list.keys():
+            start_idx = self.text_box.search(file_name, "1.0", END)
             end_idx = f"{start_idx} + {len(file_name)}c"
             self.text_box.tag_add("filename", start_idx, end_idx)
-
-    def get_end_index(self):
-        """Get the end index of the text in the Text widget."""
-        num_lines = int(self.text_box.index('end-1c').split('.')[0])
-        last_line_length = len(self.text_box.get(f"{num_lines}.0", f"{num_lines}.end"))
-        end_index = f"{num_lines}.{last_line_length}"
-        return end_index
 
     def file_icon(self):
         # Load file icons
         file_icon_path = "file-icon.png"  # Replace with your file icon path
         file_icon = PhotoImage(file=file_icon_path)
         file_icon_resized = file_icon.subsample(10, 10)  # Adjust the subsampling factors as needed
+
+        # Store a reference to avoid garbage collection
+        self.image_refs.append(file_icon_resized)  # This line stores the image reference
+
         return file_icon_resized
 
     def open_file(self, event):
@@ -154,7 +154,7 @@ class CanvasTable:
         line_start = self.text_box.index(f"{index} linestart")
         line_end = self.text_box.index(f"{index} lineend")
         file_name = self.text_box.get(line_start, line_end).strip().split("\n")[0]
-        file_path = file_type_match.get(file_name)
+        file_path = self.current_list.get(file_name)
         if file_path:
             with open(file_path, 'r') as file:
                 file_data = file.read()
@@ -166,5 +166,5 @@ class CanvasTable:
 
 if __name__ == "__main__":
     root = Tk()
-    app = CanvasTable(root, data, file_type_all, file_type_match)
+    app = CanvasTable(root, data, file_list_1, file_list_2)
     root.mainloop()
