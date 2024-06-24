@@ -17,8 +17,9 @@ class ComplexDataStructuresGUI:
         self.grid_widgets()
 
         # Load icons
-        self.file_icon = PhotoImage(file="file-icon.png")
-        self.folder_icon = PhotoImage(file="folder-icon.png")
+        self.file_icon = PhotoImage(file="file-icon.png").subsample(10, 10)
+        self.folder_icon = PhotoImage(file="folder-icon.png").subsample(10, 10)
+        
 
     def create_widgets(self):
         # Existing widgets
