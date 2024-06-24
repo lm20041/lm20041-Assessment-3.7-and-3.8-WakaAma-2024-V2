@@ -16,6 +16,10 @@ class ComplexDataStructuresGUI:
         self.create_widgets()
         self.grid_widgets()
 
+        # Load icons
+        self.file_icon = PhotoImage(file="file-icon.png")
+        self.folder_icon = PhotoImage(file="folder-icon.png")
+
     def create_widgets(self):
         # Existing widgets
         self.input_label = Label(self.root, text="Enter an integer:")
@@ -96,10 +100,12 @@ class ComplexDataStructuresGUI:
             for item in folder_contents:
                 full_path = os.path.join(folder_path, item)
                 if os.path.isdir(full_path):
-                    self.output_text.insert(END, item + '/', ("folder",))  # Tag directories with 'folder'
+                    self.output_text.image_create(END, image=self.folder_icon)  # Insert folder icon
+                    self.output_text.insert(END, " " + item + '/', ("folder",))  # Tag directories with 'folder'
                     self.output_text.insert(END, "\n")
                 else:
-                    self.output_text.insert(END, item + "\n")
+                    self.output_text.image_create(END, image=self.file_icon)  # Insert file icon
+                    self.output_text.insert(END, " " + item + "\n")
         else:
             display_str = "Folder '{}' does not exist.".format(folder_path)
             self.output_text.delete('1.0', END)
