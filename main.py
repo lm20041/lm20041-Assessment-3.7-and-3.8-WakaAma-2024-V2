@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
 import os
+import tkinter.font as tkFont
 
 class ComplexDataStructuresGUI:
     def __init__(self, root):
@@ -10,6 +11,7 @@ class ComplexDataStructuresGUI:
         self.stack = []
         self.queue = []
         self.bst = None
+        self.current_folder = "waka_ama_db"  # Initialize the current folder
 
         self.create_widgets()
         self.grid_widgets()
@@ -20,6 +22,8 @@ class ComplexDataStructuresGUI:
         self.input_entry = Entry(self.root, width=20)
         self.push_button = Button(self.root, text="Push to Data Structures", command=self.push_to_data_structures)
         self.output_text = Text(self.root, height=10, width=50)
+        self.output_text.tag_configure("folder", foreground="blue", underline=True)  # Configure 'folder' tag
+        self.output_text.tag_bind("folder", "<Button-1>", self.open_folder)  # Bind click event to 'folder' tag
         self.read_button = Button(self.root, text="Read from File", command=self.read_from_file)
         self.write_button = Button(self.root, text="Write to File", command=self.write_to_file)
 
@@ -83,16 +87,29 @@ class ComplexDataStructuresGUI:
                 self.output_text.insert(END, content)
             messagebox.showinfo("Information", "Data read from file successfully.")
 
-    def show_folder_contents(self):
-        folder_path = "waka_ama_db"
+    def show_folder_contents(self, folder_path="waka_ama_db"):
+        self.current_folder = folder_path  # Update current folder
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
             folder_contents = os.listdir(folder_path)
-            display_str = "Contents of 'waka_ama_db':\n" + "\n".join(folder_contents)
-        else:
-            display_str = "Folder 'waka_ama_db' does not exist."
+            self.output_text.delete('1.0', END)  # Clear previous content
 
-        self.output_text.delete('1.0', END)  # Clear previous content
-        self.output_text.insert(END, display_str)  # Insert new content
+            for item in folder_contents:
+                full_path = os.path.join(folder_path, item)
+                if os.path.isdir(full_path):
+                    self.output_text.insert(END, item + '/', ("folder",))  # Tag directories with 'folder'
+                    self.output_text.insert(END, "\n")
+                else:
+                    self.output_text.insert(END, item + "\n")
+        else:
+            display_str = "Folder '{}' does not exist.".format(folder_path)
+            self.output_text.delete('1.0', END)
+            self.output_text.insert(END, display_str)
+
+    def open_folder(self, event):
+        index = self.output_text.index("@%s,%s" % (event.x, event.y))
+        line = self.output_text.get(index + " linestart", index + " lineend")
+        folder_path = os.path.join(self.current_folder, line.strip('/'))
+        self.show_folder_contents(folder_path)
 
 class BSTNode:
     def __init__(self, value):
