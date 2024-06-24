@@ -1,66 +1,46 @@
-class TreeNode:
-    def __init__(self, key):
-        self.key = key
-        self.left = None
-        self.right = None
+from tkinter import *
+from tkinter import messagebox, filedialog
+import os
 
-class BST:
-    def __init__(self):
-        self.root = None
+class FileBrowserGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("File Browser GUI")
 
-    def insert(self, key):
-        if self.root is None:
-            self.root = TreeNode(key)
-        else:
-            self._insert(self.root, key)
+        self.create_widgets()
+        self.grid_widgets()
 
-    def _insert(self, node, key):
-        if key < node.key:
-            if node.left is None:
-                node.left = TreeNode(key)
-            else:
-                self._insert(node.left, key)
-        else:
-            if node.right is None:
-                node.right = TreeNode(key)
-            else:
-                self._insert(node.right, key)
+    def create_widgets(self):
+        self.path_label = Label(self.root, text="Select a directory:")
+        self.path_entry = Entry(self.root, width=50)
+        self.browse_button = Button(self.root, text="Browse", command=self.browse_directory)
 
-    def search(self, key):
-        return self._search(self.root, key)
+        self.output_text = Text(self.root, height=20, width=80)
 
-    def _search(self, node, key):
-        if node is None or node.key == key:
-            return node
-        if key < node.key:
-            return self._search(node.left, key)
-        else:
-            return self._search(node.right, key)
+    def grid_widgets(self):
+        self.path_label.grid(row=0, column=0, padx=10, pady=10)
+        self.path_entry.grid(row=0, column=1, padx=10, pady=10)
+        self.browse_button.grid(row=0, column=2, padx=10, pady=10)
+        self.output_text.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
 
-    def inorder_traversal(self):
-        self._inorder_traversal(self.root)
+    def browse_directory(self):
+        directory = filedialog.askdirectory()
+        if directory:
+            self.path_entry.delete(0, END)
+            self.path_entry.insert(0, directory)
+            self.display_directory_contents(directory)
 
-    def _inorder_traversal(self, node):
-        if node:
-            self._inorder_traversal(node.left)
-            print(node.key)
-            self._inorder_traversal(node.right)
+    def display_directory_contents(self, path):
+        try:
+            contents = os.listdir(path)
+            self.output_text.delete('1.0', END)
+            for item in contents:
+                item_path = os.path.join(path, item)
+                self.output_text.insert(END, item_path + '\n')
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
-# Example usage
-bst = BST()
-bst.insert(10)
-bst.insert(5)
-bst.insert(15)
-bst.insert(2)
-bst.insert(7)
-
-# Search for a value
-result = bst.search(7)
-if result:
-    print(f"Found: {result.key}")
-else:
-    print("Not found")
-
-# In-order traversal to print sorted keys
-print("In-order traversal:")
-bst.inorder_traversal()
+if __name__ == "__main__":
+    root = Tk()
+    app = FileBrowserGUI(root)
+    root.mainloop()
