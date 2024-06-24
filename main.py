@@ -6,18 +6,19 @@ class FileBrowserGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("File Browser GUI")
+        self.root.geometry("600x400")  # width x height
 
         self.create_widgets()
 
     def create_widgets(self):
         # Resize the text box
-        new_height = 10  # New height in rows
-        new_width = 50   # New width in columns
+        box_height = 10  # New height in rows
+        box_width = 50   # New width in columns
         self.path_label = Label(self.root, text="Select a directory:").grid(row=0, column=0, padx=10, pady=10)
         self.path_entry = Entry(self.root, width=50).grid(row=0, column=1, padx=10, pady=10)
         self.browse_button = Button(self.root, text="Browse", command=self.browse_directory).grid(row=0, column=2, padx=10, pady=10)
 
-        self.output_text = Text(self.root, height=new_height, width=new_width).grid(row=1, column=0, columnspan=3, padx=10, pady=10)
+        self.output_text = Text(self.root, height=box_height, width=box_width).grid(row=1, column=0, columnspan=3, padx=10, pady=10)
     def browse_directory(self):
         directory = filedialog.askdirectory()
         if directory:
