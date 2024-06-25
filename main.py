@@ -2,7 +2,7 @@ import os
 import fnmatch
 from tkinter import *
 from functools import partial
-
+# <<<< Convertor >>>>
 class Convertor:
   def __init__(self, partner):
     #vars
@@ -12,10 +12,10 @@ class Convertor:
     self.convertor_box = Toplevel()
 
     # disable to_convertor button
-    partner.to_convertor_button.config(state=DISABLED)
+    #partner.to_convertor_button.config(state=DISABLED)
 
     # If users press cross at top, closes convertor and 'releases' password button
-    self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
+    self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
 
     self.parent_frame = Frame(self.convertor_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
@@ -50,18 +50,18 @@ class Convertor:
     self.error_label.grid(row=4, columnspan=2)
     # row5 Create buttons
     self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
-    self.check_button.grid(row=5, ccolumn=0)
+    self.check_button.grid(row=5, column=0)
     self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
-    self.help_button.grid(row=5, ccolumn=1)
+    self.help_button.grid(row=5, column=1)
   def open_filepath():
     pass
   def list_filepath():
     pass
   def to_help(self, partner):
     pass
-  def close_Convertor(self, partner):
+  def close_convertor(self, partner):
     #put to_convertor button back to normal
-    partner.to_convertor_button.config(state=NORMAL)
+    #partner.to_convertor_button.config(state=NORMAL)
     self.convertor_box.destroy()
 if __name__ == "__main__":
     root = Tk()
