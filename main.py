@@ -63,25 +63,53 @@ class Convertor:
     def open_filepath(self):
         folder_name = self.entry_boxes[0].get()
         file_name = self.entry_boxes[1].get()
-
+        # debug entry boxs
+        folder_name = 'waka_ama_db'
+        file_name = '*Final*'
+        # check folder_name exists
         if not os.path.isdir(folder_name):
             self.error_label.config(text="Invalid folder path.")
             return
-
-        matched_files = self.list_filepath(folder_name, file_name)
-        if not matched_files:
+        # check file name exists
+        full_file_path = os.path.join(folder_name, file_name)
+        if not os.path.isfile(full_file_path):
+            self.error_label.config(text="Invalid file name.")
+            return
+        #> record all and  matching file lists and their pathway
+        # file_type_all
+        self.file_type_all = self.create_file_type_all(folder_name)
+        # check
+        if not self.file_type_all:
+            self.error_label.config(text="No matching files found.")
+        else:
+            self.error_label.config(text=f"Found {len(matched_files)} matching files.")
+        # file_type_match
+        self.file_type_match = self.create_file_type_match(self.file_type_all, file_name)
+        # check
+        if not self.file_type_match:
             self.error_label.config(text="No matching files found.")
         else:
             self.error_label.config(text=f"Found {len(matched_files)} matching files.")
 
-    def list_filepath(self, folder_name, file_name):
-        matched_files = []
-        for root, dirnames, filenames in os.walk(folder_name):
-            for filename in fnmatch.filter(filenames, file_name):
-                matched_files.append(os.path.join(root, filename))
-        return matched_files
+    def create_file_type_all(self, folder):
+        file_type_all = {}
+        for root, _, files in os.walk(folder):
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                file_type_all[filename] = file_path
+        return file_type_all
 
-    def to_help(self, partner):
+    def create_file_type_match(self, file_dict, pattern):
+        file_type_match = {}
+        for filename in fnmatch.filter(file_dict.keys(), pattern):
+            file_path = file_dict[filename]
+            file_type_match[filename] = file_path
+        return file_type_match
+
+    def to_resultsexport(self, file_all, file_match):
+        ResultsExport(self, file_all, file_match)
+
+    def to_help(self):
         pass
 
     def close_convertor(self, partner):
