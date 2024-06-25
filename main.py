@@ -70,26 +70,20 @@ class Convertor:
         if not os.path.isdir(folder_name):
             self.error_label.config(text="Invalid folder path.")
             return
-        # check file name exists
-        full_file_path = os.path.join(folder_name, file_name)
-        if not os.path.isfile(full_file_path):
-            self.error_label.config(text="Invalid file name.")
-            return
         #> record all and  matching file lists and their pathway
         # file_type_all
         self.file_type_all = self.create_file_type_all(folder_name)
         # check
         if not self.file_type_all:
             self.error_label.config(text="No matching files found.")
-        else:
-            self.error_label.config(text=f"Found {len(matched_files)} matching files.")
+        
         # file_type_match
         self.file_type_match = self.create_file_type_match(self.file_type_all, file_name)
         # check
         if not self.file_type_match:
             self.error_label.config(text="No matching files found.")
         else:
-            self.error_label.config(text=f"Found {len(matched_files)} matching files.")
+            self.error_label.config(text=f"Found {len(self.file_type_match)} matching files.")
 
     def create_file_type_all(self, folder):
         file_type_all = {}
