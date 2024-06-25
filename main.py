@@ -51,7 +51,7 @@ class Convertor:
     # row5 Create buttons
     self.check_button = Button(self.parent_frame, width=8, height=1, text="check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
     self.check_button.grid(row=5, column=0)
-    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+    self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=lambda: self.to_help(partner)) 
     self.help_button.grid(row=5, column=1)
   def open_filepath():
     pass
