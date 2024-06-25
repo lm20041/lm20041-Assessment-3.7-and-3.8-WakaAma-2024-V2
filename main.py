@@ -51,7 +51,7 @@ class Password:
     partner.to_password_button.config(state=DISABLED)
     self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
     # parent_frame
-    self.parent_frame = Frame(self.master, bg=self.background)
+    self.parent_frame = Frame(self.password_box, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
 
     self.create_widgets()
