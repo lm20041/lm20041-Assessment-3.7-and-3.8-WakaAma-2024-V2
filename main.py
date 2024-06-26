@@ -157,5 +157,6 @@ class ResultsExport:
 
 if __name__ == "__main__":
     root = Tk()
+    root.geometry("500x350") # Adjust the width (500) and height (350) as needed
     app = ResultsExport(root, data, file_type_all, file_type_match)
     root.mainloop()
