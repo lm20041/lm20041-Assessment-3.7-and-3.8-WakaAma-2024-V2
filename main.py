@@ -63,9 +63,7 @@ class Convertor:
     def open_filepath(self):
         folder_name = self.entry_boxes[0].get()
         file_name = self.entry_boxes[1].get()
-        # debug entry boxs
-        folder_name = 'waka_ama_db'
-        file_name = '*Final*'
+        
         # check folder_name exists
         if not os.path.isdir(folder_name):
             self.error_label.config(text="Invalid folder path.")
