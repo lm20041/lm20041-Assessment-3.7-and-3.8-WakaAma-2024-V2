@@ -81,9 +81,9 @@ class ResultsExport:
         self.text_label.grid(row=3, columnspan=6)
         # row 4 lable, enrty, button
         self.entry_label = Label(self.parent_frame, text="Name your results:", font=("Arial", "8", "bold"), bg=self.background) 
-        self.entry_label.grid(row=4, column=0, columnspan=2, sticky=W, padx=5)
-        self.entry_box = Entry(self.parent_frame, font=self.text_font_6)
-        self.entry_box.grid(row=4, column=2, columnspan=2, padx=5)
+        self.entry_label.grid(row=4, column=0, columnspan=2, sticky=W, padx=(5,0))
+        self.entry_box = Entry(self.parent_frame, font=self.text_font_6, width=20)
+        self.entry_box.grid(row=4, column=2, columnspan=2, padx=(0,10))
         self.export_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Export", bg=button_bg, fg=button_fg, font=self.but_font_8, command=self.export)
         self.export_button.grid(row=4, column=5, columnspan=2)
         # row 5 text 
@@ -91,12 +91,14 @@ class ResultsExport:
         self.error_label.grid(row=5, columnspan=6, pady=5)
         # row 6 buttons
         self.end_program_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="End Program", bg="black", fg=button_fg, font=self.but_font_8, command=self.end_program)
-        self.end_program_button.grid(row=6, column=0, columnspan=2)
+        self.end_program_button.grid(row=6, column=0, columnspan=3)
         self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
-        self.help_button.grid(row=6, column=4, columnspan=2)
+        self.help_button.grid(row=6, column=3, columnspan=3)
     #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
         # table var's
+        self.frame_heading = "#CCCCCC" 
+        self.frame_body = "#EDEDED"
         self.row_height = 30
         self.column_widths = [60, 100, 60]
         self.heading = 'full culb points'
@@ -126,20 +128,20 @@ class ResultsExport:
         x_end = self.canvas_width
         y_end = self.row_height
 
-        self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="lightgreen", outline="black", width=1)
-        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Extra Row", font=("Arial", 10, "bold"))
+        self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill=self.frame_heading, outline="black", width=1)
+        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
 
     def draw_3_header(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
-            self.table_canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
+            self.table_canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill=self.frame_body, outline="black", width=1)
             self.table_canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
         self.table_canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
 
     def draw_8_rows(self, y, place, associate, points):
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
-            self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill="lightgray", outline="black", width=1)
+            self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill=self.frame_body, outline="black", width=1)
             self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
 
     #<<<<<   export table to file_widgets      >>>>>
