@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import PhotoImage
 import os
 import fnmatch
-#
+
 # Example data for the table
 data = {
     'place': ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'],
@@ -36,10 +36,25 @@ class ResultsExport:
         self.but_height = 1
         self.text_fg = "#FFFFFF"
         self.background = "white"
-        self.parent_frame = Frame(self.master, bg=self.background)
-        self.parent_frame.grid(padx=10, pady=10)
+
+        # Create canvas and scrollbar
+        self.canvas = Canvas(self.master, bg=self.background)
+        self.scrollbar = Scrollbar(self.master, orient=VERTICAL, command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Create a frame inside the canvas
+        self.parent_frame = Frame(self.canvas, bg=self.background)
+        self.canvas.create_window((0, 0), window=self.parent_frame, anchor="nw")
+
+        self.parent_frame.bind("<Configure>", self.onFrameConfigure)
 
         self.create_widgets()
+
+    def onFrameConfigure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def create_widgets(self):
         # var's
@@ -80,7 +95,6 @@ class ResultsExport:
         self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
         self.help_button.grid(row=6, column=2)
     #<<<<<        table_widgets        >>>>>
-    #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
         # table var's
         self.row_height = 30
@@ -95,8 +109,8 @@ class ResultsExport:
         self.canvas_height = (self.num_rows + 2) * self.row_height  # +2 for extra row and headers
 
         # Create canvas with the exact size
-        self.canvas = Canvas(self.table_frame, width=self.canvas_width, height=self.canvas_height, bg="white")
-        self.canvas.pack(expand=False, fill=None)
+        self.table_canvas = Canvas(self.table_frame, width=self.canvas_width, height=self.canvas_height, bg="white")
+        self.table_canvas.pack(expand=False, fill=None)
 
         # Draw table
         self.draw_extra_row()
@@ -112,21 +126,21 @@ class ResultsExport:
         x_end = self.canvas_width
         y_end = self.row_height
 
-        self.canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="lightgreen", outline="black", width=1)
-        self.canvas.create_text(x_end / 2, y_end / 2, text="Extra Row", font=("Arial", 10, "bold"))
+        self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill="lightgreen", outline="black", width=1)
+        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Extra Row", font=("Arial", 10, "bold"))
 
     def draw_3_header(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
-            self.canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
-            self.canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
-        self.canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
+            self.table_canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill="lightgray", outline="black", width=1)
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
+        self.table_canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
 
     def draw_8_rows(self, y, place, associate, points):
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
-            self.canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill="lightgray", outline="black", width=1)
-            self.canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
+            self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill="lightgray", outline="black", width=1)
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
 
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
@@ -140,6 +154,7 @@ class ResultsExport:
         pass
     def to_help(self):
         pass
+
 if __name__ == "__main__":
     root = Tk()
     app = ResultsExport(root, data, file_type_all, file_type_match)
