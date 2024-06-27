@@ -213,6 +213,7 @@ class Convertor:
             self.error_label.config(text="No matching files found.")
         else:
             self.error_label.config(text=f"Found {len(self.file_type_match)} matching files.")
+            self.check_button.config(text="Check", bg="black", command=lambda:self.to_resultsexport(data, file_all, file_match))
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -230,8 +231,8 @@ class Convertor:
         return file_type_match
     # <<<<  >>>>
 
-    def to_resultsexport(self, file_all, file_match):
-        ResultsExport(self, file_all, file_match)
+    def to_resultsexport(self, data, file_all, file_match):
+        ResultsExport(self, data, file_all, file_match)
 
     def to_help(self):
         pass
