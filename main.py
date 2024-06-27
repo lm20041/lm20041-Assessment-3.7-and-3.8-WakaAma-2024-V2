@@ -26,7 +26,7 @@ class Convertor:
             print("No matching files found.")
         else:
             # Activate calculate file data <<<<<
-            self.read_files()
+            self.extracted_file_data(self.file_type_match)
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -43,13 +43,30 @@ class Convertor:
             file_type_match[filename] = file_path
         return file_type_match
 
-    def read_files(self):
-        for filename, filepath in self.file_type_match.items():
-            with open(filepath, 'r') as file:
-                self.file_contents[filename] = file.read()
-        print("\nFile contents:\n")
-        for filename, content in self.file_contents.items():
-            print(f"Contents of {filename}:\n{content}\n")
+     # <<<< CAL file data >>>>
+    def extracted_file_data(self, file_match):
+        extracted_data = {}
+        for filename, file_path in file_match.items():
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    file.readline().strip()  # Skip the first line
+                    remaining_lines = file.readlines()
+                    for line in remaining_lines:
+                        parts = line.strip().split(',')
+                        if len(parts) >= 6:
+                            try:
+                                place = int(parts[0])
+                                association = parts[5].strip()
+                                extracted_data[association] = place
+                                print(extracted_data)
+                            except ValueError:
+                                print(f"Invalid data in line: {line.strip()}")
+                                
+                    print("\n\nfile--------------")
+                    
+            except UnicodeDecodeError:
+                print(f"Cannot decode file: {file_path}")
+        return extracted_data
 
 if __name__ == "__main__":
     root = Tk()
