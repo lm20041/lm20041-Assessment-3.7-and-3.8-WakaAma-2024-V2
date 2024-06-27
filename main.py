@@ -138,7 +138,7 @@ class Password:
 class Convertor:
     def __init__(self, partner):
         # Vars
-        self.top_num = 8
+        self.top_num = 10
         self.places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
         self.data = {
             'place': [],
@@ -300,6 +300,7 @@ class Convertor:
         top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
         return top_associations
 
+        return top_associations
     def place_to_points(self, place):
         points_dict = {
             1: 8,
