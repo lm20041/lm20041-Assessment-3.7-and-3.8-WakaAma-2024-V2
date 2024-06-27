@@ -119,9 +119,7 @@ class Password:
       else:
         entry_box.config(bg="green")
     if all_valid:
-      self.error_label.config(text="All entries are valid.", fg="green")
-      for entry_box in self.entry_boxes:
-        entry_box.config(bg="green", highlightbackground="lime", highlightcolor="black")
+      self.to_convertor()
     else:
       self.error_label.config(text=error_message, fg="red")
       for entry_box in self.entry_boxes:
@@ -129,6 +127,8 @@ class Password:
   def close_password(self, partner):
     partner.to_password_button.config(state=NORMAL)
     self.password_box.destroy()
+  def to_convertor(self):
+    Convertor(self)
 if __name__ == "__main__":
   root = Tk()
   app = MainWindow(root)
