@@ -219,7 +219,10 @@ class Convertor:
         if not self.file_type_match:
             self.error_label.config(text="No matching files found.")
         else:
-            self.cal_file_data(self.file_type_match, self.top_num)
+            # activate calculate file data <<<<<
+            data = self.cal_file_data(self.file_type_match, self.top_num)
+            #  config check_button to Results_button
+            self.check_button.config(text="Results", bg="black", command=lambda:self.to_resultsexport(data, self.file_type_all, self.file_type_match))
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -237,12 +240,83 @@ class Convertor:
         return file_type_match
     # <<<< cal_file_data >>>>
     def cal_file_data(self, file_match, top_n):
+        self.extracted_data = self.extracted_file_data(file_match)
+        self.association_points = self.analyse_file_data(self.extracted_data)
+        self.all_association_points = self.sum_up_points(self.association_points)
+        self.top_association = self.get_top_associations(self.all_association_points, top_n)
+        # Step 2: Sort the associates by points
+        sorted_associates = sorted(self.top_association.items(), key=lambda item: item[1], reverse=True)
+        # Step 3: Generate the diary entry data
+        places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th']
+        data = {
+            'place': [],
+            'Associate': [],
+            'Points': []
+        }
+        #
+        for place, (associate, points) in zip(places, sorted_associates):
+            data['place'].append(place)
+            data['Associate'].append(associate)
+            data['Points'].append(points)
 
-        #  config check_button to Results_button
-        self.check_button.config(text="Results", bg="black", command=lambda:self.to_resultsexport(data, file_all, file_match))
+        return data
+
+        # <<<< CAL file data >>>>
+    def extracted_file_data(self, file_match):
+        extracted_data = {}
+        for filename, file_path in file_match.items():
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    file.readline().strip()  # Skip the first line
+                    remaining_lines = file.readlines()
+                    for line in remaining_lines:
+                        parts = line.strip().split(',')
+                        if len(parts) >= 6:
+                            try:
+                                place = int(parts[0])
+                                association = parts[5].strip()
+                                extracted_data[association] = place
+                            except ValueError:
+                                print(f"Invalid data in line: {line.strip()}")
+            except UnicodeDecodeError:
+                print(f"Cannot decode file: {file_path}")
+        return extracted_data
+
+    def analyse_file_data(self, extracted_data):
+        association_points = {}
+        for association, place in extracted_data.items():
+            points = self.place_to_points(place)
+            if association in association_points:
+                association_points[association].append(points)
+            else:
+                association_points[association] = [points]
+        return association_points
+
+    def sum_up_points(self, association_points):
+        total_points = {association: sum(points) for association, points in association_points.items()}
+        return total_points
+
+    def get_top_associations(self, total_points, top_n):
+        top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
+        return top_associations
+
+    def place_to_points(self, place):
+        points_dict = {
+            1: 8,
+            2: 7,
+            3: 6,
+            4: 5,
+            5: 4,
+            6: 3,
+            7: 2,
+            8: 1
+        }
+        return points_dict.get(place, 0)
+    # <<<< other >>>>
 
     def to_resultsexport(self, data, file_all, file_match):
-        ResultsExport(self, data, file_all, file_match)
+        print(data)
+        #ResultsExport(self, data, file_all, file_match)
 
     def to_help(self):
         pass
