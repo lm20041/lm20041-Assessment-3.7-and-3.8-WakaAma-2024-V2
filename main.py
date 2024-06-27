@@ -138,6 +138,13 @@ class Password:
 class Convertor:
     def __init__(self, partner):
         # Vars
+        self.top_num = 8
+        self.places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+        self.data = {
+            'place': [],
+            'Associate': [],
+            'Points': []
+        }
         self.text_font_6 = ("Arial", 12, "bold")
         self.text_fg = "#FFFFFF"
         self.background = "white"
@@ -212,8 +219,7 @@ class Convertor:
         if not self.file_type_match:
             self.error_label.config(text="No matching files found.")
         else:
-            self.error_label.config(text=f"Found {len(self.file_type_match)} matching files.")
-            self.check_button.config(text="Check", bg="black", command=lambda:self.to_resultsexport(data, file_all, file_match))
+            self.cal_file_data(self.file_type_match, self.top_num)
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -229,7 +235,11 @@ class Convertor:
             file_path = file_dict[filename]
             file_type_match[filename] = file_path
         return file_type_match
-    # <<<<  >>>>
+    # <<<< cal_file_data >>>>
+    def cal_file_data(self, file_match, top_n):
+
+        #  config check_button to Results_button
+        self.check_button.config(text="Results", bg="black", command=lambda:self.to_resultsexport(data, file_all, file_match))
 
     def to_resultsexport(self, data, file_all, file_match):
         ResultsExport(self, data, file_all, file_match)
