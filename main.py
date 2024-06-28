@@ -109,12 +109,23 @@ class Convertor:
                     add_on_file_results[association] = points
         # points_sum_up again
         files_results = self.points_sum_up(add_on_file_results)
+        # Check if there are enough associates to meet the requested top_num
+        if len(files_results) < top_num:
+            top_num = len(files_results)
+            self.error_label.config(text=f"Sorry, we could not round up the total that you requested. File content was too low, showing top {top_num} instead.")
         # pick out the top associates
         top_associations = self.get_top_associations(files_results, top_num)
         # Step 2: Sort the associates by points
         sorted_associates = sorted(top_associations.items(), key=lambda item: item[1], reverse=True)
-        # Step 3: Generate the diary entry data
-        places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+        # Step 3: Generate the places list based on the number of top associates
+        places = [f"{i + 1}th" for i in range(top_num)]
+        if top_num >= 1:
+            places[0] = "1st"
+        if top_num >= 2:
+            places[1] = "2nd"
+        if top_num >= 3:
+            places[2] = "3rd"
+        
         data = {
             'place': [],
             'Associate': [],
