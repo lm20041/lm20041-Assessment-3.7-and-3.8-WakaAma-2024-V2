@@ -1,35 +1,29 @@
 import os
 import fnmatch
-import random
 from tkinter import *
 from functools import partial
 
 # <<<< Convertor >>>>
 class Convertor:
     def __init__(self):
-        self.open_filepath()
         self.file_contents = {}
+        self.open_filepath()
 
     def open_filepath(self):
-        folder_name = 'waka_ama_db' # self.entry_boxes[0].get()
-        file_name = '*Final*' # self.entry_boxes[1].get()
-        # Record all and matching file lists and their pathways
-        # file_type_all
+        folder_name = 'waka_ama_db'  # self.entry_boxes[0].get()
+        file_name = '*Final*'  # self.entry_boxes[1].get()
         self.file_type_all = self.create_file_type_all(folder_name)
-        # Check
         if not self.file_type_all:
             print("No matching files found.")
+            return
 
-        # file_type_match
         self.file_type_match = self.create_file_type_match(self.file_type_all, file_name)
-        # Check
         if not self.file_type_match:
             print("No matching files found.")
         else:
-            # Activate calculate file data <<<<<
-            # Pick a random file for example
-            random_file = random.choice(list(self.file_type_match.items()))
-            self.extracted_file_data(random_file)
+            top_num = 8  # Define how many top associations you want to pick
+            data = self.cal_file_data(self.file_type_match, top_num)
+            print(data)
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -45,13 +39,53 @@ class Convertor:
             file_path = file_dict[filename]
             file_type_match[filename] = file_path
         return file_type_match
+    # <<<< NEW CAL DATA >>>>
+    def cal_file_data(self, file_match, top_num):
+        # contain results from all files
+        add_on_file_results = {}
+        for file in file_match.values():
+            # collect file_results as {associates names: total points}
+            file_results = self.loop_through_files(file)
+            # add file_results points to any existing associates name in add_on_file_results
+            for association, points in file_results.items():
+                # check if there is an existing associates
+                if association in add_on_file_results:
+                    add_on_file_results[association].extend(points)
+                else:
+                    add_on_file_results[association] = points
+        # points_sum_up again
+        files_results = self.points_sum_up(add_on_file_results)
+        # pick out the top associates
+        top_associations = self.get_top_associations(files_results, top_num)
+        # Step 2: Sort the associates by points
+        sorted_associates = sorted(top_associations.items(), key=lambda item: item[1], reverse=True)
+        # Step 3: Generate the diary entry data
+        places = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+        data = {
+            'place': [],
+            'Associate': [],
+            'Points': []
+        }
+        #
+        for place, (associate, points) in zip(places, sorted_associates):
+            data['place'].append(place)
+            data['Associate'].append(associate)
+            data['Points'].append(points)
+        # return your data as {'place': [], 'Associate': [], 'Points': []}
+        return data
 
-     # <<<< CAL file data >>>>
-    def extracted_file_data(self, file_match):
+    def loop_through_files(self, file_data):
+        # extracted {associate name:place number}
+        associate_place = self.extracted_file_data(file_data)
+        # exchange places for points earned {associate name:point number}
+        associate_points = self.place_to_points(associate_place)
+        # add points number to their associate name {associate name:point number, number, number}
+        return associate_points
+
+    def extracted_file_data(self, file_data):
         extracted_data = {}
-        filename, file_path = file_match
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
+            with open(file_data, 'r', encoding='utf-8') as file:
                 file.readline().strip()  # Skip the first line
                 remaining_lines = file.readlines()
                 for line in remaining_lines:
@@ -61,14 +95,46 @@ class Convertor:
                             place = int(parts[0])
                             association = parts[5].strip()
                             extracted_data[association] = place
-                            print(extracted_data)
                         except ValueError:
                             print(f"Invalid data in line: {line.strip()}")
-                print("\n\nfile--------------")
-    
         except UnicodeDecodeError:
-            print(f"Cannot decode file: {file_path}")
+            print(f"Cannot decode file: {file_data}")
         return extracted_data
+
+    def place_to_points(self, associate_place):
+        association_points = {}
+        # what number of place earns what points
+        points_dict = {
+            1: 8,
+            2: 7,
+            3: 6,
+            4: 5,
+            5: 4,
+            6: 3,
+            7: 2,
+            8: 1
+        }
+        # convert associate_place list to associate_points
+        for association, place in associate_place.items():
+            association_points[association] = [points_dict.get(place, 0)]
+        return association_points
+
+    def add_points_together(self, associate_points):
+        associate_add_point = {}
+        for association, points in associate_points.items():
+            if association in associate_add_point:
+                associate_add_point[association].append(points)
+            else:
+                associate_add_point[association] = points
+        return associate_add_point
+
+    def points_sum_up(self, associate_add_point):
+        total_points = {association: sum(points) for association, points in associate_add_point.items()}
+        return total_points
+
+    def get_top_associations(self, total_points, top_n):
+        top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
+        return top_associations
 
 if __name__ == "__main__":
     root = Tk()
