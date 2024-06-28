@@ -219,7 +219,7 @@ class Convertor:
         self.convertor_box.destroy()
 # <<<< ResultsExport >>>>
 class ResultsExport:
-    def __init__(self, data, file_type_all, file_type_match):
+    def __init__(self, partner, data, file_type_all, file_type_match):
         # input var's
         self.data = data
         self.file_type_all = file_type_all
@@ -235,7 +235,11 @@ class ResultsExport:
         self.but_height = 1
         self.text_fg = "#FFFFFF"
         self.background = "white"
-        self.parent_frame = Frame(self.master, bg=self.background)
+        # Disable to_convertor button (uncomment when using with the main app)
+        partner.check_button.config(state=DISABLED)
+        self.results_export_box.protocol('WM_DELETE_WINDOW', partial(self.close_results_export, partner))
+
+        self.parent_frame = Frame(self.results_export_box, bg=self.background)
         self.parent_frame.grid(padx=10, pady=10)
 
         self.create_widgets()
@@ -289,8 +293,9 @@ class ResultsExport:
     def create_file_widgets(self):
         pass
     #<<<<<      other button       >>>>>
-    def end_program(self):
-        pass
+    def close_results_export(self, partner):
+        partner.check_button.config(state=NORMAL)
+        self.results_export_box.destroy()
     def to_help(self):
         pass
 
