@@ -1,5 +1,6 @@
 import os
 import fnmatch
+import random
 from tkinter import *
 from functools import partial
 
@@ -26,7 +27,9 @@ class Convertor:
             print("No matching files found.")
         else:
             # Activate calculate file data <<<<<
-            self.extracted_file_data(self.file_type_match)
+            # Pick a random file for example
+            random_file = random.choice(list(self.file_type_match.items()))
+            self.extracted_file_data(random_file)
 
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -46,26 +49,25 @@ class Convertor:
      # <<<< CAL file data >>>>
     def extracted_file_data(self, file_match):
         extracted_data = {}
-        for filename, file_path in file_match.items():
-            try:
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    file.readline().strip()  # Skip the first line
-                    remaining_lines = file.readlines()
-                    for line in remaining_lines:
-                        parts = line.strip().split(',')
-                        if len(parts) >= 6:
-                            try:
-                                place = int(parts[0])
-                                association = parts[5].strip()
-                                extracted_data[association] = place
-                                print(extracted_data)
-                            except ValueError:
-                                print(f"Invalid data in line: {line.strip()}")
-                                
-                    print("\n\nfile--------------")
-                    
-            except UnicodeDecodeError:
-                print(f"Cannot decode file: {file_path}")
+        filename, file_path = file_match
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                file.readline().strip()  # Skip the first line
+                remaining_lines = file.readlines()
+                for line in remaining_lines:
+                    parts = line.strip().split(',')
+                    if len(parts) >= 6:
+                        try:
+                            place = int(parts[0])
+                            association = parts[5].strip()
+                            extracted_data[association] = place
+                            print(extracted_data)
+                        except ValueError:
+                            print(f"Invalid data in line: {line.strip()}")
+                print("\n\nfile--------------")
+    
+        except UnicodeDecodeError:
+            print(f"Cannot decode file: {file_path}")
         return extracted_data
 
 if __name__ == "__main__":
