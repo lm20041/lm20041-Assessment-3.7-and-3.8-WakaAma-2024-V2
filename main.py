@@ -235,6 +235,8 @@ class ResultsExport:
         self.but_height = 1
         self.text_fg = "#FFFFFF"
         self.background = "white"
+        # << partner >>
+        self.results_export_box = Toplevel()
         # Disable to_convertor button (uncomment when using with the main app)
         partner.check_button.config(state=DISABLED)
         self.results_export_box.protocol('WM_DELETE_WINDOW', partial(self.close_results_export, partner))
@@ -278,7 +280,7 @@ class ResultsExport:
         self.error_label = Label(self.parent_frame, width=self.but_width, height=self.but_height, text="", font=self.text_font_6, wraplength=400, bg=self.background, fg="red")
         self.error_label.grid(row=5, columnspan=3, pady=5)
         # row 6 buttons
-        self.end_program_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="End Program", bg="black", fg=button_fg, font=self.but_font_8, command=self.end_program)
+        self.end_program_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="End Program", bg="black", fg=button_fg, font=self.but_font_8, command=self.close_results_export)
         self.end_program_button.grid(row=6, column=0)
         self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
         self.help_button.grid(row=6, column=2)
