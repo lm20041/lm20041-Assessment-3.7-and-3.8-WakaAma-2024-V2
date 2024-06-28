@@ -65,23 +65,26 @@ class Convertor:
         file_name = self.entry_boxes[1].get()
         # put ** in file_name so def create_file_type_match has an easier time searching for files that match with that pattern.
         file_name = f"*{file_name}*"
-    
+
         self.file_type_all = self.create_file_type_all(folder_name)
         if not self.file_type_all:
-            print("No matching files found.")
+            self.error_label.config(text="No matching files found.", fg="red")
             return
-    
+
         self.file_type_match = self.create_file_type_match(self.file_type_all, file_name)
         if not self.file_type_match:
-            print("No matching files found.")
+            self.error_label.config(text="No matching files found.", fg="red")
+            return
         else:
             top_num = 8  # Define how many top associations you want to pick
             data = self.cal_file_data(self.file_type_match, top_num)
-        # <<<<<< config check_button to Results_button <<<<<
-        if data == True:
-            self.check_button.config(text="Results", bg="black", command=lambda:self.to_resultsexport(data, file_all, file_match))
+
+        # Check if data was created successfully
+        if data and data['place']:  # Check if the data dictionary is not empty
+            self.check_button.config(text="Results", bg="black", command=lambda: self.to_resultsexport(data, self.file_type_all, self.file_type_match))
+            self.error_label.config(text="Data is ready. Click 'Results' to proceed.", fg="green")
         else:
-            self.error_label.config(text="data not true", fg="red")
+            self.error_label.config(text="Data not true", fg="red")
     
     def create_file_type_all(self, folder):
         file_type_all = {}
@@ -204,8 +207,8 @@ class Convertor:
     def get_top_associations(self, total_points, top_n):
         top_associations = dict(sorted(total_points.items(), key=lambda item: item[1], reverse=True)[:top_n])
         return top_associations
-    def to_resultsexport(self, file_all, file_match):
-        ResultsExport(self, file_all, file_match)
+    def to_resultsexport(self, data, file_all, file_match):
+        ResultsExport(self, data, file_all, file_match)
     
     def to_help(self):
         pass
