@@ -219,9 +219,8 @@ class Convertor:
         self.convertor_box.destroy()
 # <<<< ResultsExport >>>>
 class ResultsExport:
-    def __init__(self, master, data, file_type_all, file_type_match):
+    def __init__(self, data, file_type_all, file_type_match):
         # input var's
-        self.master = master
         self.data = data
         self.file_type_all = file_type_all
         self.file_type_match = file_type_match
@@ -229,8 +228,6 @@ class ResultsExport:
         # Initialize a list to store image references
         self.image_refs = []  # This line initializes the list
         # setting var's
-        self.master.title("ResultsExport")
-        self.master.configure(borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
         self.text_font_12 = ("Arial", "12", "bold")
         self.text_font_6 = ("Arial", "6")
         self.but_font_8 = ("Arial", "8", "bold")
