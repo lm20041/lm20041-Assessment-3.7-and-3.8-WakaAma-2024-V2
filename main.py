@@ -356,14 +356,26 @@ class ResultsExport:
             x = sum(self.column_widths[:col])
             cell_width = self.column_widths[col]
 
-            # Adjust wrap length based on cell width
-            wrap_length = cell_width - 20  # Adjust as needed
-
             # Create rectangle for the cell
             self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
 
+            # Adjust wrap length based on cell width
+            wrap_length = cell_width - 10  # Adjust as needed
+
             # Create text with wrapping inside the cell
-            self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
+            text_id = self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
+
+            # Get current text dimensions
+            text_bbox = self.table_canvas.bbox(text_id)
+            text_width = text_bbox[2] - text_bbox[0]
+            text_height = text_bbox[3] - text_bbox[1]
+
+            # Adjust font size if text exceeds cell height
+            if text_height > self.row_height - 5:  # Adjust -5 for padding
+                current_font = self.table_canvas.itemcget(text_id, "font")
+                current_font_size = int(current_font.split()[1])
+                new_font_size = int(current_font_size * (self.row_height - 5) / text_height)
+                self.table_canvas.itemconfig(text_id, font=("Arial", new_font_size), width=wrap_length)
 
     def export(self):
         filename = self.entry_box.get()
