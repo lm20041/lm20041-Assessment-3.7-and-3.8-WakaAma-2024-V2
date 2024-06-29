@@ -308,7 +308,7 @@ class ResultsExport:
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.column_widths = [60, 60, 60]  # Initial column widths
+        self.column_widths = [60, 80, 60]  # Initial column widths
         self.heading = 'Full Club Points'
         self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
@@ -320,7 +320,7 @@ class ResultsExport:
         longest_name_width = font.measure(longest_name)
 
         # Adjust the width of the associate column
-        self.column_widths[1] = max(100, longest_name_width + 20)  # Adjust this value as needed
+        #self.column_widths[1] = max(100, longest_name_width)  # Adjust this value as needed <<<---------(X)
 
         # Calculate canvas dimensions
         self.canvas_width = sum(self.column_widths)
@@ -362,7 +362,7 @@ class ResultsExport:
             cell_width = self.column_widths[col]
 
             if col == 1:  # Adjust wrap length for the 'Associate' column
-                wrap_length = cell_width - 50  # Adjust as needed specifically for Associate column
+                wrap_length = cell_width - 80  # Adjust as needed specifically for Associate column
             else:
                 wrap_length = cell_width - 20  # Adjust as needed for other columns
 
