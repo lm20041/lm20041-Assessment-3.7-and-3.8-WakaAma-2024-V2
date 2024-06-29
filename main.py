@@ -308,22 +308,15 @@ class ResultsExport:
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.column_widths = [60, 80, 60]  # Initial column widths
+        self.total_table_width = 200  # Fixed total table width
+        self.column_widths = [60, 100, 60]  # Example: middle column is 80 pixels wide
         self.heading = 'Full Club Points'
         self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
         self.num_headers = len(self.headers)
 
-        # Find the longest associate name
-        font = tkFont.Font(family="Arial", size=10)
-        longest_name = max(self.data['Associate'], key=len)
-        longest_name_width = font.measure(longest_name)
-
-        # Adjust the width of the associate column
-        #self.column_widths[1] = max(100, longest_name_width)  # Adjust this value as needed <<<---------(X)
-
         # Calculate canvas dimensions
-        self.canvas_width = sum(self.column_widths)
+        self.canvas_width = self.total_table_width
         self.canvas_height = (self.num_rows + 2) * self.row_height  # +2 for extra row and headers
 
         # Create canvas with the exact size
@@ -347,7 +340,7 @@ class ResultsExport:
         y_end = self.row_height
 
         self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill=self.frame_heading, outline="black", width=1)
-        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"),anchor="center")
+        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"), anchor="center")
 
     def draw_3_header(self):
         for col, header in enumerate(self.headers):
@@ -361,10 +354,8 @@ class ResultsExport:
             x = sum(self.column_widths[:col])
             cell_width = self.column_widths[col]
 
-            if col == 1:  # Adjust wrap length for the 'Associate' column
-                wrap_length = cell_width - 80  # Adjust as needed specifically for Associate column
-            else:
-                wrap_length = cell_width - 20  # Adjust as needed for other columns
+            # Adjust wrap length based on cell width
+            wrap_length = cell_width - 20  # Adjust as needed
 
             # Create rectangle for the cell
             self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
@@ -372,17 +363,16 @@ class ResultsExport:
             # Create text with wrapping inside the cell
             self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
 
-    #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
 
-    #<<<<<      file_widgets       >>>>>
     def create_file_widgets(self):
         pass
-    #<<<<<      other button       >>>>>
+
     def close_results_export(self, partner):
         partner.check_button.config(state=NORMAL)
         self.results_export_box.destroy()
+
     def to_help(self):
         pass
 
