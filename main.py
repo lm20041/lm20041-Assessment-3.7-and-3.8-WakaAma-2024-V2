@@ -320,7 +320,7 @@ class ResultsExport:
         longest_name_width = font.measure(longest_name)
 
         # Adjust the width of the associate column
-        self.column_widths[1] = max(self.column_widths[1], longest_name_width + 20)  # Adding some padding
+        self.column_widths[1] = max(100, longest_name_width + 20)  # Adjust this value as needed
 
         # Calculate canvas dimensions
         self.canvas_width = sum(self.column_widths)
@@ -362,13 +362,14 @@ class ResultsExport:
             cell_width = self.column_widths[col]
 
             # Adjust wraplength based on cell width (you can adjust this value as needed)
-            wrap_length = cell_width - 20  # Adjust as needed
+            wrap_length = cell_width - 50  # Adjust as needed
 
             # Create rectangle for the cell
             self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
 
             # Create text with wrapping inside the cell
             self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
+
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
