@@ -371,7 +371,8 @@ class ResultsExport:
 
             # Adjust cell height if text exceeds current row_height
             if text_height > self.row_height - 5:  # Adjust -5 for padding
-                new_height = text_height + 5  # Adjust 10 for padding
+                new_height = text_height + 10  # Adjust 10 for padding
+                self.row_height = new_height  # Update row_height to new_height
                 self.table_canvas.coords(text_id, x + cell_width / 2, y + new_height / 2)  # Move text to center of new height
                 self.table_canvas.itemconfig(text_id, width=wrap_length)  # Update text wrapping width
                 self.table_canvas.itemconfig(self.table_canvas.find_withtag("cell_rect"), height=new_height)  # Update cell height
