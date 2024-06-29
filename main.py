@@ -4,6 +4,8 @@ from functools import partial
 import tkinter.font as tkFont
 import os
 import fnmatch
+import csv
+from tkinter import filedialog
 # <<<< Convertor >>>>
 class Convertor:
     def __init__(self, partner):
@@ -308,8 +310,8 @@ class ResultsExport:
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.total_table_width = 200  # Fixed total table width
-        self.column_widths = [60, 100, 60]  # Example: middle column is 80 pixels wide
+        self.total_table_width = 220  # Fixed total table width
+        self.column_widths = [50, 120, 50]  # Example: middle column is 80 pixels wide
         self.heading = 'Full Club Points'
         self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
@@ -364,7 +366,25 @@ class ResultsExport:
             self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
 
     def export(self):
-        pass
+        filename = self.entry_box.get()
+        if not filename:
+            self.error_label.config(text="Please enter a filename.")
+            return
+
+        file_path = filedialog.asksaveasfilename(defaultextension=".csv", initialfile=filename, filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
+        if not file_path:
+            self.error_label.config(text="Save cancelled.")
+            return
+
+        try:
+            with open(file_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(self.headers)
+                for place, associate, points in zip(self.data['place'], self.data['Associate'], self.data['Points']):
+                    writer.writerow([place, associate, points])
+            self.error_label.config(text="File saved successfully.", fg="green")
+        except Exception as e:
+            self.error_label.config(text=f"Error saving file: {e}", fg="red")
 
     def create_file_widgets(self):
         pass
