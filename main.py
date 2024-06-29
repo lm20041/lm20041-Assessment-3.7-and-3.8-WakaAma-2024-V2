@@ -367,15 +367,14 @@ class ResultsExport:
 
             # Get current text dimensions
             text_bbox = self.table_canvas.bbox(text_id)
-            text_width = text_bbox[2] - text_bbox[0]
             text_height = text_bbox[3] - text_bbox[1]
 
-            # Adjust font size if text exceeds cell height
+            # Adjust cell height if text exceeds current row_height
             if text_height > self.row_height - 5:  # Adjust -5 for padding
-                current_font = self.table_canvas.itemcget(text_id, "font")
-                current_font_size = int(current_font.split()[1])
-                new_font_size = int(current_font_size * (self.row_height - 5) / text_height)
-                self.table_canvas.itemconfig(text_id, font=("Arial", new_font_size), width=wrap_length)
+                new_height = text_height + 5  # Adjust 10 for padding
+                self.table_canvas.coords(text_id, x + cell_width / 2, y + new_height / 2)  # Move text to center of new height
+                self.table_canvas.itemconfig(text_id, width=wrap_length)  # Update text wrapping width
+                self.table_canvas.itemconfig(self.table_canvas.find_withtag("cell_rect"), height=new_height)  # Update cell height
 
     def export(self):
         filename = self.entry_box.get()
