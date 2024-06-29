@@ -308,7 +308,7 @@ class ResultsExport:
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.column_widths = [60, 100, 60]  # Initial column widths
+        self.column_widths = [60, 60, 60]  # Initial column widths
         self.heading = 'Full Club Points'
         self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
@@ -362,7 +362,7 @@ class ResultsExport:
             cell_width = self.column_widths[col]
 
             # Adjust wraplength based on cell width (you can adjust this value as needed)
-            wrap_length = cell_width - 10  # Adjust as needed
+            wrap_length = cell_width - 20  # Adjust as needed
 
             # Create rectangle for the cell
             self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
