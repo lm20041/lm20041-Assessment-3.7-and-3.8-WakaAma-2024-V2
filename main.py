@@ -375,7 +375,10 @@ class ResultsExport:
         if not file_path:
             self.error_label.config(text="Save cancelled.")
             return
-
+        # Check for invalid characters in the filename
+        if re.search(r'[<>:"/\\|?*\s]', filename):
+            self.error_label.config(text="Filename cannot contain spaces or any of the following characters: <>:\"/\\|?*")
+            return
         try:
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
