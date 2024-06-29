@@ -285,8 +285,55 @@ class ResultsExport:
         self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
         self.help_button.grid(row=6, column=2)
     #<<<<<        table_widgets        >>>>>
+    #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
-        pass
+        # table var's
+        self.frame_heading = "#CCCCCC" 
+        self.frame_body = "#EDEDED"
+        self.row_height = 30
+        self.column_widths = [60, 100, 60]
+        self.heading = 'full culb points'
+        self.headers = ['Place', 'Associate', ' Total\nPoints']
+        self.num_rows = len(data['place'])
+        self.num_headers = len(self.headers)
+
+        # Calculate canvas dimensions
+        self.canvas_width = sum(self.column_widths)
+        self.canvas_height = (self.num_rows + 2) * self.row_height  # +2 for extra row and headers
+
+        # Create canvas with the exact size
+        self.table_canvas = Canvas(self.table_frame, width=self.canvas_width, height=self.canvas_height, bg="white")
+        self.table_canvas.pack(expand=False, fill=None)
+
+        # Draw table
+        self.draw_extra_row()
+        self.draw_3_header()
+
+        for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
+            y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
+            self.draw_8_rows(y, place, associate, points)
+
+    def draw_extra_row(self):
+        x_start = 0
+        y_start = 0
+        x_end = self.canvas_width
+        y_end = self.row_height
+
+        self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill=self.frame_heading, outline="black", width=1)
+        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+
+    def draw_3_header(self):
+        for col, header in enumerate(self.headers):
+            x = sum(self.column_widths[:col])
+            self.table_canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill=self.frame_body, outline="black", width=1)
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
+        self.table_canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
+
+    def draw_8_rows(self, y, place, associate, points):
+        for col, value in enumerate([place, associate, points]):
+            x = sum(self.column_widths[:col])
+            self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill=self.frame_body, outline="black", width=1)
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
