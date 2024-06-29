@@ -1,6 +1,7 @@
 from tkinter import *
-from functools import partial
 from tkinter import PhotoImage
+from functools import partial
+import tkinter.font as tkFont
 import os
 import fnmatch
 # <<<< Convertor >>>>
@@ -302,18 +303,24 @@ class ResultsExport:
         self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
         self.help_button.grid(row=6, column=2)
     #<<<<<        table_widgets        >>>>>
-    #<<<<<        table_widgets        >>>>>
-    #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
-        # table var's
+        # Table vars
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.column_widths = [60, 100, 60]
-        self.heading = 'full culb points'
-        self.headers = ['Place', 'Associate', ' Total\nPoints']
+        self.column_widths = [60, 100, 60]  # Initial column widths
+        self.heading = 'Full Club Points'
+        self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
         self.num_headers = len(self.headers)
+
+        # Find the longest associate name
+        font = tkFont.Font(family="Arial", size=10)
+        longest_name = max(self.data['Associate'], key=len)
+        longest_name_width = font.measure(longest_name)
+
+        # Adjust the width of the associate column
+        self.column_widths[1] = max(self.column_widths[1], longest_name_width + 20)  # Adding some padding
 
         # Calculate canvas dimensions
         self.canvas_width = sum(self.column_widths)
@@ -328,6 +335,8 @@ class ResultsExport:
         self.draw_3_header()
 
         for i, (place, associate, points) in enumerate(zip(self.data['place'], self.data['Associate'], self.data['Points'])):
+            if i >= 8:  # Limit the display to 8 rows
+                break
             y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
             self.draw_8_rows(y, place, associate, points)
 
@@ -350,15 +359,16 @@ class ResultsExport:
     def draw_8_rows(self, y, place, associate, points):
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
-            self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill=self.frame_body, outline="black", width=1)
+            cell_width = self.column_widths[col]
 
-            # Set a smaller font for the associate names
-            if col == 1:  # Middle column
-                font = ("Arial", 8)  # Smaller font size for names
-            else:
-                font = ("Arial", 10)  # Regular font size for other columns
+            # Adjust wraplength based on cell width (you can adjust this value as needed)
+            wrap_length = cell_width - 10  # Adjust as needed
 
-            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=font, anchor="center")
+            # Create rectangle for the cell
+            self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
+
+            # Create text with wrapping inside the cell
+            self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
