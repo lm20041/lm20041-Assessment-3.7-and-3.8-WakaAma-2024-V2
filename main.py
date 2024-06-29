@@ -361,8 +361,10 @@ class ResultsExport:
             x = sum(self.column_widths[:col])
             cell_width = self.column_widths[col]
 
-            # Adjust wraplength based on cell width (you can adjust this value as needed)
-            wrap_length = cell_width - 50  # Adjust as needed
+            if col == 1:  # Adjust wrap length for the 'Associate' column
+                wrap_length = cell_width - 50  # Adjust as needed specifically for Associate column
+            else:
+                wrap_length = cell_width - 20  # Adjust as needed for other columns
 
             # Create rectangle for the cell
             self.table_canvas.create_rectangle(x, y, x + cell_width, y + self.row_height, fill=self.frame_body, outline="black", width=1)
