@@ -351,7 +351,14 @@ class ResultsExport:
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
             self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill=self.frame_body, outline="black", width=1)
-            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center")
+
+            # Set a smaller font for the associate names
+            if col == 1:  # Middle column
+                font = ("Arial", 8)  # Smaller font size for names
+            else:
+                font = ("Arial", 10)  # Regular font size for other columns
+
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=font, anchor="center")
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
