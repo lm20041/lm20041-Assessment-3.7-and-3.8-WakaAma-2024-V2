@@ -218,6 +218,7 @@ class Convertor:
         # partner.to_convertor_button.config(state=NORMAL)
         self.convertor_box.destroy()
 # <<<< ResultsExport >>>>
+# <<<< ResultsExport >>>>
 class ResultsExport:
     def __init__(self, partner, data, file_type_all, file_type_match):
         # input var's
@@ -235,16 +236,32 @@ class ResultsExport:
         self.but_height = 1
         self.text_fg = "#FFFFFF"
         self.background = "white"
+
         # << partner >>
         self.results_export_box = Toplevel()
+        self.results_export_box.geometry("450x350")
         # Disable to_convertor button (uncomment when using with the main app)
         partner.check_button.config(state=DISABLED)
         self.results_export_box.protocol('WM_DELETE_WINDOW', partial(self.close_results_export, partner))
 
-        self.parent_frame = Frame(self.results_export_box, bg=self.background)
-        self.parent_frame.grid(padx=10, pady=10)
+        # Create canvas and scrollbar
+        self.canvas = Canvas(self.results_export_box, bg=self.background)
+        self.scrollbar = Scrollbar(self.results_export_box, orient=VERTICAL, command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Create a frame inside the canvas
+        self.parent_frame = Frame(self.canvas, bg=self.background)
+        self.canvas.create_window((0, 0), window=self.parent_frame, anchor="nw")
+
+        self.parent_frame.bind("<Configure>", self.onFrameConfigure)
 
         self.create_widgets()
+
+    def onFrameConfigure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def create_widgets(self):
         # var's
@@ -286,6 +303,7 @@ class ResultsExport:
         self.help_button.grid(row=6, column=2)
     #<<<<<        table_widgets        >>>>>
     #<<<<<        table_widgets        >>>>>
+    #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
         # table var's
         self.frame_heading = "#CCCCCC" 
@@ -294,7 +312,7 @@ class ResultsExport:
         self.column_widths = [60, 100, 60]
         self.heading = 'full culb points'
         self.headers = ['Place', 'Associate', ' Total\nPoints']
-        self.num_rows = len(data['place'])
+        self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
         self.num_headers = len(self.headers)
 
         # Calculate canvas dimensions
@@ -309,7 +327,7 @@ class ResultsExport:
         self.draw_extra_row()
         self.draw_3_header()
 
-        for i, (place, associate, points) in enumerate(zip(data['place'], data['Associate'], data['Points'])):
+        for i, (place, associate, points) in enumerate(zip(self.data['place'], self.data['Associate'], self.data['Points'])):
             y = (i + 2) * self.row_height  # Adjust y position by +2 to account for extra row and headers
             self.draw_8_rows(y, place, associate, points)
 
@@ -320,20 +338,20 @@ class ResultsExport:
         y_end = self.row_height
 
         self.table_canvas.create_rectangle(x_start, y_start, x_end, y_end, fill=self.frame_heading, outline="black", width=1)
-        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"))
+        self.table_canvas.create_text(x_end / 2, y_end / 2, text="Full Club Points", font=("Arial", 10, "bold"),anchor="center")
 
     def draw_3_header(self):
         for col, header in enumerate(self.headers):
             x = sum(self.column_widths[:col])
             self.table_canvas.create_rectangle(x, self.row_height, x + self.column_widths[col], 2 * self.row_height, fill=self.frame_body, outline="black", width=1)
-            self.table_canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"))
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, 1.5 * self.row_height, text=header, font=("Arial", 10, "bold"), anchor="center")
         self.table_canvas.create_line(0, 2 * self.row_height, self.canvas_width, 2 * self.row_height, fill="black")
 
     def draw_8_rows(self, y, place, associate, points):
         for col, value in enumerate([place, associate, points]):
             x = sum(self.column_widths[:col])
             self.table_canvas.create_rectangle(x, y, x + self.column_widths[col], y + self.row_height, fill=self.frame_body, outline="black", width=1)
-            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10))
+            self.table_canvas.create_text(x + self.column_widths[col] / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center")
     #<<<<<   export table to file_widgets      >>>>>
     def export(self):
         pass
