@@ -361,9 +361,14 @@ class ResultsExport:
 
             # Adjust wrap length based on cell width
             wrap_length = cell_width - 10  # Adjust as needed
+            
+            if col == 1:  # Adjust font size for the 'Associate' column
+                font_size = ("Arial", 5)  # Adjust as needed specifically for Associate column
+            else:
+                font_size = ("Arial", 10)  # Adjust as needed for other columns
 
             # Create text with wrapping inside the cell
-            text_id = self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=("Arial", 10), anchor="center", width=wrap_length)
+            text_id = self.table_canvas.create_text(x + cell_width / 2, y + self.row_height / 2, text=value, font=font_size, anchor="center", width=wrap_length)
 
             # Get current text dimensions
             text_bbox = self.table_canvas.bbox(text_id)
@@ -372,7 +377,6 @@ class ResultsExport:
             # Adjust cell height if text exceeds current row_height
             if text_height > self.row_height - 5:  # Adjust -5 for padding
                 new_height = text_height + 10  # Adjust 10 for padding
-                self.row_height = new_height  # Update row_height to new_height
                 self.table_canvas.coords(text_id, x + cell_width / 2, y + new_height / 2)  # Move text to center of new height
                 self.table_canvas.itemconfig(text_id, width=wrap_length)  # Update text wrapping width
                 self.table_canvas.itemconfig(self.table_canvas.find_withtag("cell_rect"), height=new_height)  # Update cell height
