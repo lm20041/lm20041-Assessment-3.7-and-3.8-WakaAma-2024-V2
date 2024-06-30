@@ -46,15 +46,13 @@ class MainWindow:
         # row 4
         self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
         self.to_password_button.grid(row=4, column=0, pady=10)
-        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
+        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.open_help)
         self.to_help_button.grid(row=4, column=1)
     def to_password(self):
         Password(self)
     def open_help(self):
+        self.help_manager = Help(self)
         self.help_manager.open_help()
-
-    def close_help(self):
-        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 
 # <<<< class password >>>>
 class Password:
@@ -155,8 +153,6 @@ class Convertor:
         self.text_fg = "#FFFFFF"
         self.background = "white"
         self.convertor_box = Toplevel()
-        # Track if Help window is open
-        self.help_window_open = False
 
         # Disable to_convertor button (uncomment when using with the main app)
         partner.to_convertor_button.config(state=DISABLED)
@@ -203,7 +199,7 @@ class Convertor:
         self.check_button = Button(self.parent_frame, width=8, height=1, text="Check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
         self.check_button.grid(row=5, column=0)
 
-        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
+        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.open_help)
         self.to_help_button.grid(row=5, column=1)
 # <<<< create_file type_all, type_match >>>>
     def open_filepath(self):
@@ -357,10 +353,8 @@ class Convertor:
         ResultsExport(self, data, file_all, file_match)
 
     def open_help(self):
+        self.help_manager = Help(self)
         self.help_manager.open_help()
-
-    def close_help(self):
-        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 
     def close_convertor(self, partner):
         # Put to_convertor button back to normal (uncomment when using with the main app)
@@ -374,8 +368,6 @@ class ResultsExport:
         self.file_type_all = file_type_all
         self.file_type_match = file_type_match
         self.current_list = file_type_match
-        # Track if Help window is open
-        self.help_window_open = False
         # Initialize a list to store image references
         self.image_refs = []  # This line initializes the list
         # setting var's
@@ -449,7 +441,7 @@ class ResultsExport:
         # row 6 buttons
         self.end_program_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="End Program", bg="black", fg=button_fg, font=self.but_font_8, command=self.close_results_export)
         self.end_program_button.grid(row=6, column=0, columnspan=3)
-        self.to_help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
+        self.to_help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.open_help)
         self.to_help_button.grid(row=6, column=3,  columnspan=3)
     #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
@@ -558,10 +550,8 @@ class ResultsExport:
         self.results_export_box.destroy()
 
     def open_help(self):
+        self.help_manager = Help(self)
         self.help_manager.open_help()
-
-    def close_help(self):
-        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 # <<<<           Help           >>>>
 class Help:
     def __init__(self, partner):
@@ -582,9 +572,9 @@ class Help:
         # Method to open the help window
         if self.help_window is None:
             self.help_window = tkinter.Toplevel(self.parent)
-            self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
+            self.help_window.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
             # parent_frame
-            self.parent_frame = Frame(self.help_box, bg=self.background)
+            self.parent_frame = Frame(self.help_window, bg=self.background)
             self.parent_frame.grid(padx=10, pady=10)
             #var
             button_fg = "white"
@@ -601,11 +591,12 @@ class Help:
             self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
             self.Dismissed_button.grid(row=2, pady=10)
 
-    def close_help(self, partner):
+    def close_help(self):
         # Method to close the help window
         if self.help_window is not None:
             self.help_window.destroy()  # Destroy the help window
             self.help_window = None
+            # Additional cleanup or actions related to closing the help window
 if __name__ == "__main__":
   root = Tk()
   app = MainWindow(root)
