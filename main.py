@@ -16,6 +16,8 @@ class MainWindow:
     self.text_font_6 = ("Arial", "12", "bold")
     self.text_fg = "#FFFFFF"
     self.background = "white"
+    # Track if Help window is open
+    self.help_window_open = False
     self.parent_frame = Frame(self.master, bg=self.background)
     self.parent_frame.grid(padx=10, pady=10)
 
@@ -49,7 +51,12 @@ class MainWindow:
   def to_password(self):
     Password(self)
   def to_help(self):
-    Help(self)
+    if not self.help_window_open:
+      self.help_window_open = True
+      Help(self)
+
+  def close_help(self):
+    self.help_window_open = False
 # <<<< class password >>>>
 class Password:
   def __init__(self, partner):
@@ -149,6 +156,8 @@ class Convertor:
         self.text_fg = "#FFFFFF"
         self.background = "white"
         self.convertor_box = Toplevel()
+        # Track if Help window is open
+        self.help_window_open = False
 
         # Disable to_convertor button (uncomment when using with the main app)
         partner.to_convertor_button.config(state=DISABLED)
@@ -349,7 +358,12 @@ class Convertor:
         ResultsExport(self, data, file_all, file_match)
 
     def to_help(self):
-        Help(self)
+        if not self.help_window_open:
+            self.help_window_open = True
+            Help(self)
+
+    def close_help(self):
+        self.help_window_open = False
 
     def close_convertor(self, partner):
         # Put to_convertor button back to normal (uncomment when using with the main app)
@@ -363,6 +377,8 @@ class ResultsExport:
         self.file_type_all = file_type_all
         self.file_type_match = file_type_match
         self.current_list = file_type_match
+        # Track if Help window is open
+        self.help_window_open = False
         # Initialize a list to store image references
         self.image_refs = []  # This line initializes the list
         # setting var's
@@ -545,7 +561,12 @@ class ResultsExport:
         self.results_export_box.destroy()
 
     def to_help(self):
-        Help(self)
+        if not self.help_window_open:
+            self.help_window_open = True
+            Help(self)
+
+    def close_help(self):
+        self.help_window_open = False
 # <<<< Help >>>>
 class Help:
     def __init__(self, partner):
@@ -556,20 +577,19 @@ class Help:
         self.but_width = 8
         self.but_height = 1
         self.text_fg = "#FFFFFF"
-        self.background = "FFE0BD"
+        self.background = "#FFE0BD"
         # add <partner>
         self.help_box = Toplevel()
-        partner.to_help_button.config(state=DISABLED)
         self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
         # parent_frame
-        self.parent_frame = Frame(self.master, bg=self.background)
+        self.parent_frame = Frame(self.help_box, bg=self.background)
         self.parent_frame.grid(padx=10, pady=10)
         
         self.create_widgets()
     def create_widgets(self):
         #var
         button_fg = "white"
-        button_bg = "#black"
+        button_bg = "black"
         # row 0 text
         self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_12, bg=self.background)
         self.heading_label.grid(row=0)
@@ -579,10 +599,14 @@ class Help:
         self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
         self.text_label.grid(row=1)
         # row 2
-        self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.to_password)
+        self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
         self.Dismissed_button.grid(row=2, pady=10)
-    def close_help(self, partner):
-        partner.to_help_button.config(state=NORMAL)
+
+        #self.partner = partner
+
+    def close_help(self):
+        self.help_box.destroy()
+        self.partner.close_help()
         self.help_box.destroy()
 if __name__ == "__main__":
   root = Tk()
