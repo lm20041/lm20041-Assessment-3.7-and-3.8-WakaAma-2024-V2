@@ -46,7 +46,7 @@ class MainWindow:
     # row 4
     self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
     self.to_password_button.grid(row=4, column=0, pady=10)
-    self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help())
+    self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
     self.to_help_button.grid(row=4, column=1)
   def to_password(self):
     Password(self)
@@ -202,7 +202,7 @@ class Convertor:
         self.check_button = Button(self.parent_frame, width=8, height=1, text="Check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
         self.check_button.grid(row=5, column=0)
 
-        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help())
+        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
         self.to_help_button.grid(row=5, column=1)
 # <<<< create_file type_all, type_match >>>>
     def open_filepath(self):
@@ -594,7 +594,7 @@ class Help:
         self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
         self.Dismissed_button.grid(row=2, pady=10)
 
-    def close_help(self):
+    def close_help(self, partner):
         self.partner.help_window_open = False
         self.help_box.destroy()
 if __name__ == "__main__":
