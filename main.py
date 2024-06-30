@@ -564,14 +564,14 @@ class Help:
         self.text_fg = "#FFFFFF"
         self.background = "#FFE0BD"
         # <<<< linke to all window <<<<
-        self.parent = parent  # Parent widget or window
+        #self.parent = partner  # Parent widget or window
         self.help_window = None  # Placeholder for the help window
         
         self.create_widgets()
     def create_widgets(self):
         # Method to open the help window
         if self.help_window is None:
-            self.help_window = tkinter.Toplevel(self.parent)
+            self.help_window = Toplevel()
             self.help_window.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
             # parent_frame
             self.parent_frame = Frame(self.help_window, bg=self.background)
