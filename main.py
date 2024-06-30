@@ -11,7 +11,7 @@ from tkinter import filedialog
 class MainWindow:
   def __init__(self, master):
     self.master = master #Using this in windows settings to allow easy placement of frames
-    self.master.title("Entry Password")
+    self.master.title("App Waka Culb")
     self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
     self.text_font_6 = ("Arial", "12", "bold")
     self.text_fg = "#FFFFFF"
@@ -26,7 +26,7 @@ class MainWindow:
     button_bg = "#004C99"
     # row 0 text
     self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
-    self.heading_label.grid(row=0)
+    self.heading_label.grid(row=0, columnspan=2)
 
     # row 1 Load the image
     image_path = "images.png"
@@ -36,16 +36,20 @@ class MainWindow:
     # Create a label to display the image
     self.image_label = Label(self.parent_frame, image=image)
     self.image_label.image = image  # Store a reference to the PhotoImage object
-    self.image_label.grid(row=1, padx=20, pady=20)
+    self.image_label.grid(row=1, columnspan=2, padx=20, pady=20)
     # row 2 text
     txt = "this program is created to help the Waka Ama club sort through their recorded files from the race to determine the associated winner of place. This app is only to be used by the Waka Ama club therefore a password will be needed to access this app. if you were kind of club and you have not received the password please contact {phone number}."
     self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "8"), wraplength=350, bg=self.background)
-    self.text_label.grid(row=2)
+    self.text_label.grid(row=2, columnspan=2)
     # row 4
     self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
-    self.to_password_button.grid(row=4, pady=10)
+    self.to_password_button.grid(row=4, column=0, pady=10)
+    self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help())
+    self.to_help_button.grid(row=4, column=1)
   def to_password(self):
     Password(self)
+  def to_help(self):
+    Help(self)
 # <<<< class password >>>>
 class Password:
   def __init__(self, partner):
@@ -147,7 +151,7 @@ class Convertor:
         self.convertor_box = Toplevel()
 
         # Disable to_convertor button (uncomment when using with the main app)
-        # partner.to_convertor_button.config(state=DISABLED)
+        partner.to_convertor_button.config(state=DISABLED)
 
         # If users press cross at top, close convertor and 'release' password button
         self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
@@ -191,8 +195,8 @@ class Convertor:
         self.check_button = Button(self.parent_frame, width=8, height=1, text="Check", bg=button_bg, fg=button_fg, font=self.text_font_6, command=self.open_filepath)
         self.check_button.grid(row=5, column=0)
 
-        self.help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command=lambda: self.to_help(partner))
-        self.help_button.grid(row=5, column=1)
+        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help())
+        self.to_help_button.grid(row=5, column=1)
 # <<<< create_file type_all, type_match >>>>
     def open_filepath(self):
         folder_name = self.entry_boxes[0].get()
@@ -345,13 +349,12 @@ class Convertor:
         ResultsExport(self, data, file_all, file_match)
 
     def to_help(self):
-        pass
+        Help(self)
 
     def close_convertor(self, partner):
         # Put to_convertor button back to normal (uncomment when using with the main app)
         # partner.to_convertor_button.config(state=NORMAL)
         self.convertor_box.destroy()
-# <<<< ResultsExport >>>>
 # <<<< ResultsExport >>>>
 class ResultsExport:
     def __init__(self, partner, data, file_type_all, file_type_match):
@@ -433,8 +436,8 @@ class ResultsExport:
         # row 6 buttons
         self.end_program_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="End Program", bg="black", fg=button_fg, font=self.but_font_8, command=self.close_results_export)
         self.end_program_button.grid(row=6, column=0, columnspan=3)
-        self.help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
-        self.help_button.grid(row=6, column=3,  columnspan=3)
+        self.to_help_button = Button(self.parent_frame, width=self.but_width, height=self.but_height, text="Help", bg="#F4A434", fg=button_fg, font=self.but_font_8, command=self.to_help)
+        self.to_help_button.grid(row=6, column=3,  columnspan=3)
     #<<<<<        table_widgets        >>>>>
     def create_table_widgets(self):
         # Table vars
@@ -542,8 +545,45 @@ class ResultsExport:
         self.results_export_box.destroy()
 
     def to_help(self):
-        pass
-
+        Help(self)
+# <<<< Help >>>>
+class Help:
+    def __init__(self, partner):
+        # Var's
+        self.text_font_12 = ("Arial", "12", "bold")
+        self.text_font_6 = ("Arial", "6")
+        self.but_font_8 = ("Arial", "8", "bold")
+        self.but_width = 8
+        self.but_height = 1
+        self.text_fg = "#FFFFFF"
+        self.background = "FFE0BD"
+        # add <partner>
+        self.help_box = Toplevel()
+        partner.to_help_button.config(state=DISABLED)
+        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
+        # parent_frame
+        self.parent_frame = Frame(self.master, bg=self.background)
+        self.parent_frame.grid(padx=10, pady=10)
+        
+        self.create_widgets()
+    def create_widgets(self):
+        #var
+        button_fg = "white"
+        button_bg = "#black"
+        # row 0 text
+        self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_12, bg=self.background)
+        self.heading_label.grid(row=0)
+        
+        # row 1 text
+        txt = "-Once you're done press the end program button and it will take you back to the collector window where again you can input a file and a file name to research about\n-To use this program simply enter the password and username you have been given you will only be given free tries once your free tries are up you'll be locked out.\n-Then input your folder and file name so that the program knows exactly what folder and what type of file does search inside it.\n-The export button will save your table results and put it into folder this change will be displayed on file browser.\n-You can use file browser diary this to scroll in and out of folders to get to the file.\n-Use file types to switch from displaying all files to files that match up with the chosen file name.\n-The search entry just below the screen can be used to search up any particular name of file displayed on browser.\n-Click on a file inside to open up a window displaying the file contents"
+        self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
+        self.text_label.grid(row=1)
+        # row 2
+        self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.to_password)
+        self.Dismissed_button.grid(row=2, pady=10)
+    def close_help(self, partner):
+        partner.to_help_button.config(state=NORMAL)
+        self.help_box.destroy()
 if __name__ == "__main__":
   root = Tk()
   app = MainWindow(root)
