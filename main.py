@@ -155,7 +155,7 @@ class Convertor:
         self.convertor_box = Toplevel()
 
         # Disable to_convertor button (uncomment when using with the main app)
-        partner.to_convertor_button.config(state=DISABLED)
+        partner.validate_button.config(state=DISABLED)
 
         # If users press cross at top, close convertor and 'release' password button
         self.convertor_box.protocol('WM_DELETE_WINDOW', partial(self.close_convertor, partner))
