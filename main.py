@@ -55,8 +55,6 @@ class MainWindow:
       self.help_window_open = True
       Help(self)
 
-  def close_help(self):
-    self.help_window_open = False
 # <<<< class password >>>>
 class Password:
   def __init__(self, partner):
@@ -362,9 +360,6 @@ class Convertor:
             self.help_window_open = True
             Help(self)
 
-    def close_help(self):
-        self.help_window_open = False
-
     def close_convertor(self, partner):
         # Put to_convertor button back to normal (uncomment when using with the main app)
         # partner.to_convertor_button.config(state=NORMAL)
@@ -564,10 +559,7 @@ class ResultsExport:
         if not self.help_window_open:
             self.help_window_open = True
             Help(self)
-
-    def close_help(self):
-        self.help_window_open = False
-# <<<< Help >>>>
+# <<<<           Help           >>>>
 class Help:
     def __init__(self, partner):
         # Var's
@@ -602,11 +594,8 @@ class Help:
         self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
         self.Dismissed_button.grid(row=2, pady=10)
 
-        #self.partner = partner
-
     def close_help(self):
-        self.help_box.destroy()
-        self.partner.close_help()
+        self.partner.help_window_open = False
         self.help_box.destroy()
 if __name__ == "__main__":
   root = Tk()
