@@ -242,7 +242,7 @@ class ResultsExport:
 
         # << partner >>
         self.results_export_box = Toplevel()
-        self.results_export_box.geometry("450x350")
+        self.results_export_box.geometry("500x350")
         # Disable to_convertor button (uncomment when using with the main app)
         partner.check_button.config(state=DISABLED)
         self.results_export_box.protocol('WM_DELETE_WINDOW', partial(self.close_results_export, partner))
@@ -275,8 +275,8 @@ class ResultsExport:
         self.heading_label.grid(row=0, columnspan=6, sticky="W")
         # row 1 text
         intro_txt = "This program has produced a table results on the left hand side of the window. displaying the top eight associate places we search from all files in your chosen folder {}. Files that match up with the file name of your choice {}. You can save your table result into the file browser on the right hand side of the window. Make sure to enter a name for it and the entry box down below or just collect exploits button and the default name will be set. The file browser can display all your files in the folder or just the ones you called on. Each name shown in the files will have an attachment link that when click on will open a window displaying the file contents. You can also use it to search up pacific names in your name files"
-        self.intro_label = Label(self.parent_frame, text=intro_txt, font=self.text_font_6, wraplength=350, bg=self.background)
-        self.intro_label.grid(row=1, columnspan=6)
+        self.intro_label = Label(self.parent_frame, text=intro_txt, font=self.text_font_6, wraplength=450, bg=self.background)
+        self.intro_label.grid(row=1, columnspan=6, padx=10)
         # row 2 frames
         self.table_frame = Frame(self.parent_frame, bg="#FFFF99")
         self.table_frame.grid(row=2, column=0, columnspan=3, padx=(0, 5), pady=10, sticky="N")
@@ -310,8 +310,8 @@ class ResultsExport:
         self.frame_heading = "#CCCCCC" 
         self.frame_body = "#EDEDED"
         self.row_height = 30
-        self.total_table_width = 220  # Fixed total table width
-        self.column_widths = [50, 120, 50]  # Example: middle column is 80 pixels wide
+        self.total_table_width = 230  # Fixed total table width
+        self.column_widths = [50, 120, 60]  # Example: middle column is 80 pixels wide
         self.heading = 'Full Club Points'
         self.headers = ['Place', 'Associate', 'Total\nPoints']
         self.num_rows = min(len(self.data['place']), 8)  # Ensure we only display up to 8 rows
