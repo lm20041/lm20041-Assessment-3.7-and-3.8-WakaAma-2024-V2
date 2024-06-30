@@ -9,142 +9,143 @@ from tkinter import filedialog
 
 # <<<< class MainWindow >>>>
 class MainWindow:
-  def __init__(self, master):
-    self.master = master #Using this in windows settings to allow easy placement of frames
-    self.master.title("App Waka Culb")
-    self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
-    self.text_font_6 = ("Arial", "12", "bold")
-    self.text_fg = "#FFFFFF"
-    self.background = "white"
-    # Track if Help window is open
-    self.help_window_open = False
-    self.parent_frame = Frame(self.master, bg=self.background)
-    self.parent_frame.grid(padx=10, pady=10)
+    def __init__(self, master):
+        self.master = master #Using this in windows settings to allow easy placement of frames
+        self.master.title("App Waka Culb")
+        self.master.configure(bg="#FFFFFF", borderwidth=5, highlightbackground="#CCCCCC", highlightthickness=10, highlightcolor="#CCCCCC")
+        self.text_font_6 = ("Arial", "12", "bold")
+        self.text_fg = "#FFFFFF"
+        self.background = "white"
+        # Track if Help window is open
+        self.help_window_open = False
+        self.parent_frame = Frame(self.master, bg=self.background)
+        self.parent_frame.grid(padx=10, pady=10)
+    
+        self.create_widgets()
+    def create_widgets(self):
+        #var
+        button_fg = "white"
+        button_bg = "#004C99"
+        # row 0 text
+        self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
+        self.heading_label.grid(row=0, columnspan=2)
+    
+        # row 1 Load the image
+        image_path = "images.png"
+        image = PhotoImage(file=image_path)
+        # Resize the image to roughly 50x50 pixels
+        image = image.subsample(image.width() // 150, image.height() // 80)
+        # Create a label to display the image
+        self.image_label = Label(self.parent_frame, image=image)
+        self.image_label.image = image  # Store a reference to the PhotoImage object
+        self.image_label.grid(row=1, columnspan=2, padx=20, pady=20)
+        # row 2 text
+        txt = "this program is created to help the Waka Ama club sort through their recorded files from the race to determine the associated winner of place. This app is only to be used by the Waka Ama club therefore a password will be needed to access this app. if you were kind of club and you have not received the password please contact {phone number}."
+        self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "8"), wraplength=350, bg=self.background)
+        self.text_label.grid(row=2, columnspan=2)
+        # row 4
+        self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
+        self.to_password_button.grid(row=4, column=0, pady=10)
+        self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
+        self.to_help_button.grid(row=4, column=1)
+    def to_password(self):
+        Password(self)
+    def open_help(self):
+        self.help_manager.open_help()
 
-    self.create_widgets()
-  def create_widgets(self):
-    #var
-    button_fg = "white"
-    button_bg = "#004C99"
-    # row 0 text
-    self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_6, bg=self.background)
-    self.heading_label.grid(row=0, columnspan=2)
-
-    # row 1 Load the image
-    image_path = "images.png"
-    image = PhotoImage(file=image_path)
-    # Resize the image to roughly 50x50 pixels
-    image = image.subsample(image.width() // 150, image.height() // 80)
-    # Create a label to display the image
-    self.image_label = Label(self.parent_frame, image=image)
-    self.image_label.image = image  # Store a reference to the PhotoImage object
-    self.image_label.grid(row=1, columnspan=2, padx=20, pady=20)
-    # row 2 text
-    txt = "this program is created to help the Waka Ama club sort through their recorded files from the race to determine the associated winner of place. This app is only to be used by the Waka Ama club therefore a password will be needed to access this app. if you were kind of club and you have not received the password please contact {phone number}."
-    self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "8"), wraplength=350, bg=self.background)
-    self.text_label.grid(row=2, columnspan=2)
-    # row 4
-    self.to_password_button = Button(self.parent_frame, width=8, height=1, text="Start", font=self.text_font_6, bg=button_bg, fg=button_fg, command=self.to_password)
-    self.to_password_button.grid(row=4, column=0, pady=10)
-    self.to_help_button = Button(self.parent_frame, width=8, height=1, text="Help", bg="#F4A434", fg=button_fg, font=self.text_font_6, command= self.to_help)
-    self.to_help_button.grid(row=4, column=1)
-  def to_password(self):
-    Password(self)
-  def to_help(self):
-    if not self.help_window_open:
-      self.help_window_open = True
-      Help(self)
+    def close_help(self):
+        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 
 # <<<< class password >>>>
 class Password:
-  def __init__(self, partner):
-    # Var's
-    self.text_font_6 = ("Arial", "12", "bold")
-    self.text_fg = "#FFFFFF"
-    self.background = "white"
-    # add <partner>
-    self.password_box = Toplevel()
-    partner.to_password_button.config(state=DISABLED)
-    self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
-    # parent_frame
-    self.parent_frame = Frame(self.password_box, bg=self.background)
-    self.parent_frame.grid(padx=10, pady=10)
+    def __init__(self, partner):
+        # Var's
+        self.text_font_6 = ("Arial", "12", "bold")
+        self.text_fg = "#FFFFFF"
+        self.background = "white"
+        # add <partner>
+        self.password_box = Toplevel()
+        partner.to_password_button.config(state=DISABLED)
+        self.password_box.protocol('WM_DELETE_WINDOW', partial(self.close_password, partner))
+        # parent_frame
+        self.parent_frame = Frame(self.password_box, bg=self.background)
+        self.parent_frame.grid(padx=10, pady=10)
+    
+        self.create_widgets()
+    def create_widgets(self):
+        #var
+        button_fg = "white"
+        # Define entry labels
+        entry_labels = ["username", "password"]
+        self.entry_boxes = []
+        # row0
+        self.heading_label = Label(self.parent_frame, text="Waka Ama", font=self.text_font_6, bg=self.background)
+        self.heading_label.grid(row=0, columnspan=2)
+        # row1
+        txt="if Wakana culb member please enter password below"
+        self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "10"), bg=self.background)
+        self.text_label.grid(row=1, columnspan=2)
+    
+        # row2 Create entry labels and boxes
+        for i, label in enumerate(entry_labels):
+            # Create and place the label above the entry box
+            Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i+2, column=0, sticky=W, padx=5, pady=(10, 0))
+            entry_box = Entry(self.parent_frame, font=self.text_font_6)
+            show_char = '*' if label == "password" else ''
+            entry_box.grid(row=i+2, column=1, pady=5)
+            entry_box.config(highlightthickness=2, show=show_char, highlightbackground="grey", highlightcolor="blue")
+            
+            self.entry_boxes.append(entry_box) 
+        # row4 Create validate button
+        self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
+        self.validate_button.grid(row=4, columnspan=2)
+        # row5
+        self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
+        self.error_label.grid(row=5, columnspan=2, sticky=W)
 
-    self.create_widgets()
-  def create_widgets(self):
-    #var
-    button_fg = "white"
-    # Define entry labels
-    entry_labels = ["username", "password"]
-    self.entry_boxes = []
-    # row0
-    self.heading_label = Label(self.parent_frame, text="Waka Ama", font=self.text_font_6, bg=self.background)
-    self.heading_label.grid(row=0, columnspan=2)
-    # row1
-    txt="if Wakana culb member please enter password below"
-    self.text_label = Label(self.parent_frame, text=txt, font=("Arial", "10"), bg=self.background)
-    self.text_label.grid(row=1, columnspan=2)
-
-    # row2 Create entry labels and boxes
-    for i, label in enumerate(entry_labels):
-      # Create and place the label above the entry box
-      Label(self.parent_frame, text=label, font=self.text_font_6, bg=self.background).grid(row=i+2, column=0, sticky=W, padx=5, pady=(10, 0))
-      entry_box = Entry(self.parent_frame, font=self.text_font_6)
-      show_char = '*' if label == "password" else ''
-      entry_box.grid(row=i+2, column=1, pady=5)
-      entry_box.config(highlightthickness=2, show=show_char, highlightbackground="grey", highlightcolor="blue")
-
-      self.entry_boxes.append(entry_box) 
-    # row4 Create validate button
-    self.validate_button = Button(self.parent_frame, text="Validate", bg="#004C99", fg=button_fg, font=self.text_font_6, command=self.validate_entries)
-    self.validate_button.grid(row=4, columnspan=2)
-    # row5
-    self.error_label = Label(self.parent_frame, text="", font=self.text_font_6,wraplength=400, bg=self.background, fg="red")
-    self.error_label.grid(row=5, columnspan=2, sticky=W)
-
-  def validate_entries(self):
-    # Define correct values
-    correct_values = ["overseers", "W@k@C1ub3234", "correct"]
-    error_messages = [
-      "Please enter in your user and password before continuing",
-      "Sorry, no space allowed",
-      "Invalid username",
-      "Invalid password"
-      ]
-
-    all_valid = True
-    error_message = "Errors:"
-    for i, entry_box in enumerate(self.entry_boxes):
-      entry_value = entry_box.get()
-      # Check if the entry value is empty
-      if entry_value == "":  
-        entry_box.config(bg="red")
-        error_message = error_messages[0]
-        all_valid = False
-        break
-      elif ' ' in entry_value:
-        entry_box.config(bg="red")
-        error_message = error_messages[1]
-        all_valid = False
-        break
-      elif entry_value != correct_values[i]:
-        entry_box.config(bg="red")
-        error_message = error_messages[i+2]
-        all_valid = False
-        break
-      else:
-        entry_box.config(bg="green")
-    if all_valid:
-      self.to_convertor()
-    else:
-      self.error_label.config(text=error_message, fg="red")
-      for entry_box in self.entry_boxes:
-        entry_box.config(bg="red", highlightbackground="pink", highlightcolor="black")
-  def close_password(self, partner):
-    partner.to_password_button.config(state=NORMAL)
-    self.password_box.destroy()
-  def to_convertor(self):
-    Convertor(self)
+    def validate_entries(self):
+        # Define correct values
+        correct_values = ["overseers", "W@k@C1ub3234", "correct"]
+        error_messages = [
+          "Please enter in your user and password before continuing",
+          "Sorry, no space allowed",
+          "Invalid username",
+          "Invalid password"
+          ]
+    
+        all_valid = True
+        error_message = "Errors:"
+        for i, entry_box in enumerate(self.entry_boxes):
+            entry_value = entry_box.get()
+            # Check if the entry value is empty
+            if entry_value == "":  
+                entry_box.config(bg="red")
+                error_message = error_messages[0]
+                all_valid = False
+                break
+            elif ' ' in entry_value:
+                entry_box.config(bg="red")
+                error_message = error_messages[1]
+                all_valid = False
+                break
+            elif entry_value != correct_values[i]:
+                entry_box.config(bg="red")
+                error_message = error_messages[i+2]
+                all_valid = False
+                break
+            else:
+                entry_box.config(bg="green")
+        if all_valid:
+            self.to_convertor()
+        else:
+            self.error_label.config(text=error_message, fg="red")
+            for entry_box in self.entry_boxes:
+                entry_box.config(bg="red", highlightbackground="pink", highlightcolor="black")
+    def close_password(self, partner):
+        partner.to_password_button.config(state=NORMAL)
+        self.password_box.destroy()
+    def to_convertor(self):
+        Convertor(self)
 
 # <<<< Convertor >>>>
 class Convertor:
@@ -355,10 +356,11 @@ class Convertor:
     def to_resultsexport(self, data, file_all, file_match):
         ResultsExport(self, data, file_all, file_match)
 
-    def to_help(self):
-        if not self.help_window_open:
-            self.help_window_open = True
-            Help(self)
+    def open_help(self):
+        self.help_manager.open_help()
+
+    def close_help(self):
+        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 
     def close_convertor(self, partner):
         # Put to_convertor button back to normal (uncomment when using with the main app)
@@ -555,10 +557,11 @@ class ResultsExport:
         partner.check_button.config(state=NORMAL)
         self.results_export_box.destroy()
 
-    def to_help(self):
-        if not self.help_window_open:
-            self.help_window_open = True
-            Help(self)
+    def open_help(self):
+        self.help_manager.open_help()
+
+    def close_help(self):
+        self.help_manager.close_help(self)  # Passes 'self' as 'partner'
 # <<<<           Help           >>>>
 class Help:
     def __init__(self, partner):
@@ -570,33 +573,39 @@ class Help:
         self.but_height = 1
         self.text_fg = "#FFFFFF"
         self.background = "#FFE0BD"
-        # add <partner>
-        self.help_box = Toplevel()
-        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
-        # parent_frame
-        self.parent_frame = Frame(self.help_box, bg=self.background)
-        self.parent_frame.grid(padx=10, pady=10)
+        # <<<< linke to all window <<<<
+        self.parent = parent  # Parent widget or window
+        self.help_window = None  # Placeholder for the help window
         
         self.create_widgets()
     def create_widgets(self):
-        #var
-        button_fg = "white"
-        button_bg = "black"
-        # row 0 text
-        self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_12, bg=self.background)
-        self.heading_label.grid(row=0)
-        
-        # row 1 text
-        txt = "-Once you're done press the end program button and it will take you back to the collector window where again you can input a file and a file name to research about\n-To use this program simply enter the password and username you have been given you will only be given free tries once your free tries are up you'll be locked out.\n-Then input your folder and file name so that the program knows exactly what folder and what type of file does search inside it.\n-The export button will save your table results and put it into folder this change will be displayed on file browser.\n-You can use file browser diary this to scroll in and out of folders to get to the file.\n-Use file types to switch from displaying all files to files that match up with the chosen file name.\n-The search entry just below the screen can be used to search up any particular name of file displayed on browser.\n-Click on a file inside to open up a window displaying the file contents"
-        self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
-        self.text_label.grid(row=1)
-        # row 2
-        self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
-        self.Dismissed_button.grid(row=2, pady=10)
+        # Method to open the help window
+        if self.help_window is None:
+            self.help_window = tkinter.Toplevel(self.parent)
+            self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
+            # parent_frame
+            self.parent_frame = Frame(self.help_box, bg=self.background)
+            self.parent_frame.grid(padx=10, pady=10)
+            #var
+            button_fg = "white"
+            button_bg = "black"
+            # row 0 text
+            self.heading_label = Label(self.parent_frame, text="Welcome to Waka Ama", font=self.text_font_12, bg=self.background)
+            self.heading_label.grid(row=0)
+            
+            # row 1 text
+            txt = "-Once you're done press the end program button and it will take you back to the collector window where again you can input a file and a file name to research about\n-To use this program simply enter the password and username you have been given you will only be given free tries once your free tries are up you'll be locked out.\n-Then input your folder and file name so that the program knows exactly what folder and what type of file does search inside it.\n-The export button will save your table results and put it into folder this change will be displayed on file browser.\n-You can use file browser diary this to scroll in and out of folders to get to the file.\n-Use file types to switch from displaying all files to files that match up with the chosen file name.\n-The search entry just below the screen can be used to search up any particular name of file displayed on browser.\n-Click on a file inside to open up a window displaying the file contents"
+            self.text_label = Label(self.parent_frame, text=txt, font=self.text_font_6, wraplength=350, bg=self.background)
+            self.text_label.grid(row=1)
+            # row 2
+            self.Dismissed_button = Button(self.parent_frame, width=8, height=1, text="Dismissed_button", font=self.but_font_8, bg=button_bg, fg=button_fg, command=self.close_help)
+            self.Dismissed_button.grid(row=2, pady=10)
 
     def close_help(self, partner):
-        self.partner.help_window_open = False
-        self.help_box.destroy()
+        # Method to close the help window
+        if self.help_window is not None:
+            self.help_window.destroy()  # Destroy the help window
+            self.help_window = None
 if __name__ == "__main__":
   root = Tk()
   app = MainWindow(root)
