@@ -363,7 +363,7 @@ class ResultsExport:
             wrap_length = cell_width - 10  # Adjust as needed
             
             if col == 1:  # Adjust font size for the 'Associate' column
-                font_size = ("Arial", 5)  # Adjust as needed specifically for Associate column
+                font_size = ("Arial", 8)  # Adjust as needed specifically for Associate column
             else:
                 font_size = ("Arial", 10)  # Adjust as needed for other columns
 
