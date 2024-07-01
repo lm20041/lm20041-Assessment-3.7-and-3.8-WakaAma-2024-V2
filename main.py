@@ -572,7 +572,7 @@ class Help:
         # Method to open the help window
         if self.help_window is None:
             self.help_window = Toplevel()
-            self.help_window.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
+            #self.help_window.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
             # parent_frame
             self.parent_frame = Frame(self.help_window, bg=self.background)
             self.parent_frame.grid(padx=10, pady=10)
