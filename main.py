@@ -546,8 +546,10 @@ class ResultsExport:
         pass
 
     def close_results_export(self, partner):
+        print("close_results_export called")  # Debugging print statement
         partner.check_button.config(state=NORMAL)
         self.results_export_box.destroy()
+        print("Window should be destroyed")  # Debugging print statement
 
     def open_help(self):
         self.help_manager = Help(self)
